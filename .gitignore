@@ -37,11 +37,8 @@ com_crashlytics_export_strings.xml
 .project
 .metadata/
 /android/bin/
-/core/bin/
-/desktop/bin/
-/html/bin/
-/ios/bin/
-/ios-moe/bin/
+/emulator/bin/
+/desktop-middleware/bin/
 *.tmp
 *.bak
 *.swp
@@ -55,43 +52,28 @@ com_crashlytics_export_strings.xml
 
 /nbproject/private/
 /android/nbproject/private/
-/core/nbproject/private/
-/desktop/nbproject/private/
-/html/nbproject/private/
-/ios/nbproject/private/
-/ios-moe/nbproject/private/
+/emulator/nbproject/private/
+/desktop-middleware/nbproject/private/
 
 /build/
 /android/build/
-/core/build/
-/desktop/build/
-/html/build/
-/ios/build/
-/ios-moe/build/
+/emulator/build/
+/desktop-middleware/build/
 
 /nbbuild/
 /android/nbbuild/
-/core/nbbuild/
-/desktop/nbbuild/
-/html/nbbuild/
-/ios/nbbuild/
-/ios-moe/nbbuild/
+/emulator/nbbuild/
+/desktop-middleware/nbbuild/
 
 /dist/
 /android/dist/
-/core/dist/
-/desktop/dist/
-/html/dist/
-/ios/dist/
-/ios-moe/dist/
+/emulator/dist/
+/desktop-middleware/dist/
 
 /nbdist/
 /android/nbdist/
-/core/nbdist/
-/desktop/nbdist/
-/html/nbdist/
-/ios/nbdist/
-/ios-moe/nbdist/
+/emulator/nbdist/
+/desktop-middleware/nbdist/
 
 nbactions.xml
 nb-configuration.xml
@@ -103,11 +85,8 @@ nb-configuration.xml
 gradle-app.setting
 /build/
 /android/build/
-/core/build/
-/desktop/build/
-/html/build/
-/ios/build/
-/ios-moe/build/
+/emulator/build/
+/desktop-middleware/build/
 
 ## OS Specific
 .DS_Store
