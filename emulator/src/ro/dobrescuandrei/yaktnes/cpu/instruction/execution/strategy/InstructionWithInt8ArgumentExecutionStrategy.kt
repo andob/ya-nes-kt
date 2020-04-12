@@ -5,13 +5,13 @@ import ro.dobrescuandrei.yaktnes.cpu.instruction.addressing_mode.InstructionArgu
 import ro.dobrescuandrei.yaktnes.cpu.instruction.definition.InstructionDefinition
 import ro.dobrescuandrei.yaktnes.cpu.MachineCode
 
-class InstructionWithDecimalArgumentExecutionStrategy : InstructionExecutionStrategy<Int8>
+class InstructionWithInt8ArgumentExecutionStrategy : InstructionExecutionStrategy<Int8>
 {
     override fun getInstructionArgumentType() = Int8::class.java
 
     override fun executeInstruction(definition : InstructionDefinition<Int8>, machineCode : MachineCode)
     {
-        val value=InstructionArgumentFactory.getDecimalArgument(
+        val value=InstructionArgumentFactory.getInt8Argument(
                 addressingMode = definition.addressingMode,
                 machineCode = machineCode)
 

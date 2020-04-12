@@ -9,7 +9,7 @@ object InstructionArgumentFactory
 {
     //http://www.obelisk.me.uk/6502/addressing.html
     //http://wiki.nesdev.com/w/index.php/CPU_addressing_modes
-    fun getDecimalArgument(addressingMode : AddressingMode, machineCode : MachineCode) : Int8
+    fun getInt8Argument(addressingMode : AddressingMode, machineCode : MachineCode) : Int8
     {
         when(addressingMode)
         {
@@ -36,6 +36,8 @@ object InstructionArgumentFactory
             AddressingMode.IndirectY ->
             {
                 val pointer=getPointerArgument(addressingMode, machineCode)
+                if (pointer is Pointer.ToAccumulator)
+                    return NES.CPU.A
                 return NES.CPU_BUS[pointer]
             }
 

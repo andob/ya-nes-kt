@@ -16,14 +16,12 @@ class CPU
 
     data class Status
     (
-        val C : Boolean = false, //carry bit
-        val Z : Boolean = false, //zero?
-        val I : Boolean = false, //disable interrupts
-        val D : Boolean = false, //decimal mode
-        val B : Boolean = false, //break
-        val U : Boolean = false, //unused
-        val V : Boolean = false, //overflow
-        val N : Boolean = false  //negative
+        val C : Boolean = false, //is carry mode enabled?
+        val Z : Boolean = false, //was last result zero?
+        val I : Boolean = false, //should disable interrupts?
+        val B : Boolean = false, //should break?
+        val V : Boolean = false, //last result caused an overflow?
+        val N : Boolean = false  //was last result negative?
     )
 
     fun execute(machineCode : MachineCode)

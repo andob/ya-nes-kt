@@ -2,7 +2,7 @@ package ro.dobrescuandrei.yaktnes.cpu.instruction.execution
 
 import ro.dobrescuandrei.yaktnes.cpu.instruction.definition.InstructionDefinition
 import ro.dobrescuandrei.yaktnes.cpu.instruction.execution.strategy.InstructionExecutionStrategy
-import ro.dobrescuandrei.yaktnes.cpu.instruction.execution.strategy.InstructionWithDecimalArgumentExecutionStrategy
+import ro.dobrescuandrei.yaktnes.cpu.instruction.execution.strategy.InstructionWithInt8ArgumentExecutionStrategy
 import ro.dobrescuandrei.yaktnes.cpu.instruction.execution.strategy.InstructionWithPointerArgumentExecutionStrategy
 import ro.dobrescuandrei.yaktnes.cpu.instruction.execution.strategy.InstructionWithoutArgumentExecutionStrategy
 import ro.dobrescuandrei.yaktnes.cpu.MachineCode
@@ -11,7 +11,7 @@ object InstructionExecutor
 {
     private val strategies = listOf(
         InstructionWithoutArgumentExecutionStrategy(),
-        InstructionWithDecimalArgumentExecutionStrategy(),
+        InstructionWithInt8ArgumentExecutionStrategy(),
         InstructionWithPointerArgumentExecutionStrategy()
     ) as List<InstructionExecutionStrategy<*>>
 
