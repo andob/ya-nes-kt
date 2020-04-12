@@ -3,7 +3,7 @@ package ro.dobrescuandrei.yaktnes.cpu.instruction.execution.strategy
 import ro.dobrescuandrei.yaktnes.cpu.datatype.Pointer
 import ro.dobrescuandrei.yaktnes.cpu.instruction.addressing_mode.InstructionArgumentFactory
 import ro.dobrescuandrei.yaktnes.cpu.instruction.definition.InstructionDefinition
-import ro.dobrescuandrei.yaktnes.cpu.machine_code.MachineCode
+import ro.dobrescuandrei.yaktnes.cpu.MachineCode
 
 class InstructionWithPointerArgumentExecutionStrategy : InstructionExecutionStrategy<Pointer>
 {

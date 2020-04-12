@@ -1,20 +1,16 @@
 package ro.dobrescuandrei.yaktnes.cpu
 
-import ro.dobrescuandrei.yaktnes.cpu.datatype.Decimal
-import ro.dobrescuandrei.yaktnes.cpu.datatype.Pointer
-import ro.dobrescuandrei.yaktnes.cpu.instruction.addressing_mode.InstructionArgumentFactory
+import ro.dobrescuandrei.yaktnes.cpu.datatype.Int8
 import ro.dobrescuandrei.yaktnes.cpu.instruction.definition.InstructionDefinitions
-import ro.dobrescuandrei.yaktnes.cpu.instruction.definition.InstructionGroupDefinition
 import ro.dobrescuandrei.yaktnes.cpu.instruction.execution.InstructionExecutor
-import ro.dobrescuandrei.yaktnes.cpu.machine_code.MachineCode
 
-object CPU
+class CPU
 {
-    var A  = Decimal(0x00)  //the A (Accumulator) register
-    var X  = Decimal(0x00)  //the X register
-    var Y  = Decimal(0x00)  //the Y register
+    var A  = Int8(0x00)  //the A (Accumulator) register
+    var X  = Int8(0x00)  //the X register
+    var Y  = Int8(0x00)  //the Y register
 
-    var programCounter : Decimal = Decimal(0x00)
+    var programCounter = 0
 
     var status = Status()
 
@@ -32,7 +28,7 @@ object CPU
 
     fun execute(machineCode : MachineCode)
     {
-        while (machineCode.hasNext())
+        while (machineCode.hasNextByte())
         {
             InstructionDefinitions[machineCode.nextByte()]?.let { definition ->
                 InstructionExecutor.executeInstruction(definition, machineCode)

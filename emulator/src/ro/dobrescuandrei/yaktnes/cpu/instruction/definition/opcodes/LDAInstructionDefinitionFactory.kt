@@ -1,20 +1,19 @@
 package ro.dobrescuandrei.yaktnes.cpu.instruction.definition.opcodes
 
-import ro.dobrescuandrei.yaktnes.cpu.datatype.Decimal
+import ro.dobrescuandrei.yaktnes.cpu.datatype.Int8
 import ro.dobrescuandrei.yaktnes.cpu.instruction.addressing_mode.AddressingMode
 import ro.dobrescuandrei.yaktnes.cpu.instruction.definition.InstructionDefinition
 import ro.dobrescuandrei.yaktnes.cpu.instruction.definition.InstructionGroupDefinition
 import ro.dobrescuandrei.yaktnes.cpu.instruction.definition.InstructionGroupDefinitionFactory
 import ro.dobrescuandrei.yaktnes.cpu.instruction.lda
 
-//http://www.6502.org/tutorials/6502opcodes.html
-object LDAInstructionDefinitionFactory : InstructionGroupDefinitionFactory<Decimal>
+object LDAInstructionDefinitionFactory : InstructionGroupDefinitionFactory<Int8>
 {
-    override fun newInstance() : InstructionGroupDefinition<Decimal>
+    override fun newInstance() : InstructionGroupDefinition<Int8>
     {
         return InstructionGroupDefinition(
             name = "LDA",
-            argumentType = Decimal::class.java,
+            argumentType = Int8::class.java,
             execution = ::lda,
             definitions = listOf(
 

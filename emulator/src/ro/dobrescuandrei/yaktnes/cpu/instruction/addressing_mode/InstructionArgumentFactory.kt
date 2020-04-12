@@ -1,16 +1,15 @@
 package ro.dobrescuandrei.yaktnes.cpu.instruction.addressing_mode
 
-import ro.dobrescuandrei.yaktnes.cpu.CPU
-import ro.dobrescuandrei.yaktnes.cpu.CpuBus
-import ro.dobrescuandrei.yaktnes.cpu.datatype.Decimal
+import ro.dobrescuandrei.yaktnes.NES
+import ro.dobrescuandrei.yaktnes.cpu.datatype.Int8
 import ro.dobrescuandrei.yaktnes.cpu.datatype.Pointer
-import ro.dobrescuandrei.yaktnes.cpu.machine_code.MachineCode
+import ro.dobrescuandrei.yaktnes.cpu.MachineCode
 
 object InstructionArgumentFactory
 {
     //http://www.obelisk.me.uk/6502/addressing.html
     //http://wiki.nesdev.com/w/index.php/CPU_addressing_modes
-    fun getDecimalArgument(addressingMode : AddressingMode, machineCode : MachineCode) : Decimal
+    fun getDecimalArgument(addressingMode : AddressingMode, machineCode : MachineCode) : Int8
     {
         when(addressingMode)
         {
@@ -22,6 +21,7 @@ object InstructionArgumentFactory
 
             AddressingMode.Relative ->
             {
+                //todo this surely is wrong
                 return machineCode.nextDecimal()
             }
 
@@ -36,7 +36,7 @@ object InstructionArgumentFactory
             AddressingMode.IndirectY ->
             {
                 val pointer=getPointerArgument(addressingMode, machineCode)
-                return CpuBus[pointer]
+                return NES.CPU_BUS[pointer]
             }
 
             else -> throw RuntimeException("Invalid addressing mode!")
@@ -47,6 +47,12 @@ object InstructionArgumentFactory
     {
         when(addressingMode)
         {
+            AddressingMode.Accumulator ->
+            {
+                //the argument is a pointer to CPU accumulator
+                return Pointer.ToAccumulator()
+            }
+
             AddressingMode.ZeroPage ->
             {
                 //the argument is a pointer from Zero-Page (#0000 -> #00FF)
@@ -57,14 +63,14 @@ object InstructionArgumentFactory
             {
                 //the argument is a pointer from Zero-Page (#0000 -> #00FF)
                 val pointer=machineCode.nextZeroPagePointer()
-                return (pointer+CPU.X).rem(0xFF)
+                return (pointer+NES.CPU.X).rem(0xFF+1)
             }
 
             AddressingMode.ZeroPageY ->
             {
                 //the argument is a pointer from Zero-Page (#0000 -> #00FF)
                 val pointer=machineCode.nextZeroPagePointer()
-                return (pointer+CPU.Y).rem(0xFF)
+                return (pointer+NES.CPU.Y).rem(0xFF+1)
             }
 
             AddressingMode.Absolute ->
@@ -77,22 +83,22 @@ object InstructionArgumentFactory
             {
                 //the argument is a 16-bit pointer
                 val pointer=machineCode.nextPointer()
-                return (pointer+CPU.X).rem(0xFF)
+                return (pointer+NES.CPU.X).rem(0xFFFF+1)
             }
 
             AddressingMode.AbsoluteY ->
             {
                 //the argument is a pointer
                 val pointer=machineCode.nextPointer()
-                return (pointer+CPU.Y).rem(0xFF)
+                return (pointer+NES.CPU.Y).rem(0xFFFF+1)
             }
 
             AddressingMode.Indirect ->
             {
                 //the argument is a pointer to pointer
                 val pointer=machineCode.nextPointer()
-                val leastSignificantByte=CpuBus[pointer.rem(0xFF)].toByte()
-                val mostSignificantByte=CpuBus[(pointer+1).rem(0xFF)].toByte()
+                val leastSignificantByte=NES.CPU_BUS[pointer.rem(0xFF+1)].toByte()
+                val mostSignificantByte=NES.CPU_BUS[(pointer+1).rem(0xFF+1)].toByte()
                 return Pointer(leastSignificantByte, mostSignificantByte)
             }
 
@@ -100,8 +106,8 @@ object InstructionArgumentFactory
             {
                 //the argument is a pointer to pointer
                 val pointer=machineCode.nextPointer()
-                val leastSignificantByte=CpuBus[(pointer+CPU.X).rem(0xFF)].toByte()
-                val mostSignificantByte=CpuBus[(pointer+CPU.X+1).rem(0xFF)].toByte()
+                val leastSignificantByte=NES.CPU_BUS[(pointer+NES.CPU.X).rem(0xFF+1)].toByte()
+                val mostSignificantByte=NES.CPU_BUS[(pointer+NES.CPU.X+1).rem(0xFF+1)].toByte()
                 return Pointer(leastSignificantByte, mostSignificantByte)
             }
 
@@ -109,10 +115,10 @@ object InstructionArgumentFactory
             {
                 //the argument is a pointer to pointer
                 val pointer=machineCode.nextPointer()
-                val leastSignificantByte=CpuBus[pointer.rem(0xFF)].toByte()
-                val mostSignificantByte=CpuBus[(pointer+1).rem(0xFF)].toByte()
+                val leastSignificantByte=NES.CPU_BUS[pointer.rem(0xFF+1)].toByte()
+                val mostSignificantByte=NES.CPU_BUS[(pointer+1).rem(0xFF+1)].toByte()
                 val childPointer=Pointer(leastSignificantByte, mostSignificantByte)
-                return (childPointer+CPU.Y).rem(0xFF)
+                return (childPointer+NES.CPU.Y).rem(0xFFFF+1)
             }
 
             else -> throw RuntimeException("Invalid addressing mode!")

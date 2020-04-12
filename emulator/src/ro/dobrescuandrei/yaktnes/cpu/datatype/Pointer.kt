@@ -1,13 +1,14 @@
 package ro.dobrescuandrei.yaktnes.cpu.datatype
 
-class Pointer
+@OptIn(ExperimentalUnsignedTypes::class)
+open class Pointer
 (
     //16-bit address (0x0000 -> 0xFFFF)
-    private var address : Short
+    private var address : UShort
 )
 {
     constructor(leastSignificantByte : Byte, mostSignificantByte : Byte) : this(
-        address = (leastSignificantByte.toInt() shl 8 or mostSignificantByte.toInt()).toShort())
+        address = (leastSignificantByte.toUByte().toUInt() shl 8 or mostSignificantByte.toUByte().toUInt()).toUShort())
 
     //comparison operators: < <= == > >= !=
     operator fun compareTo(another : Pointer) = address.compareTo(another.address)
@@ -15,15 +16,21 @@ class Pointer
     override fun hashCode() = address.toInt()
 
     //arithmetic operators: + - %
-    operator fun plus(another : Decimal) = Pointer((address+another.toInt()).toShort())
-    operator fun plus(another : Int) = Pointer((address+another).toShort())
-    operator fun minus(another : Decimal) = Pointer((address-another.toInt()).toShort())
-    operator fun rem(another : Short) = Pointer(address.rem(another).toShort())
+    operator fun plus(another : Int8) = Pointer((address+another.toUInt()).toUShort())
+    operator fun plus(another : Int) = Pointer((address+another.toUInt()).toUShort())
+    operator fun minus(another : Int8) = Pointer((address-another.toUInt()).toUShort())
+    operator fun rem(another : Short) = Pointer(address.rem(another.toUInt()).toUShort())
+    operator fun rem(another : Int) = Pointer(address.rem(another.toUInt()).toUShort())
 
     //increment / decrement operators: ++ --
-    operator fun inc() = Pointer((address+1).toShort())
-    operator fun dec() = Pointer((address-1).toShort())
+    operator fun inc() = Pointer(address.inc())
+    operator fun dec() = Pointer(address.dec())
 
     override fun toString() = "Pointer($address)"
-    fun toInt() = address.toInt()
+    fun toUShort() = address.toUShort()
+    fun toUInt() = address.toUInt()
+    fun toInt() = toUInt().toInt()
+
+    //special type of Pointer - the operation should be applied on CPU accumulator
+    class ToAccumulator : Pointer(0xffff.toUShort())
 }

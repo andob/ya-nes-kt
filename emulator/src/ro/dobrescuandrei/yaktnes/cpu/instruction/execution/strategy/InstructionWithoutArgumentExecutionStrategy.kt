@@ -1,7 +1,7 @@
 package ro.dobrescuandrei.yaktnes.cpu.instruction.execution.strategy
 
 import ro.dobrescuandrei.yaktnes.cpu.instruction.definition.InstructionDefinition
-import ro.dobrescuandrei.yaktnes.cpu.machine_code.MachineCode
+import ro.dobrescuandrei.yaktnes.cpu.MachineCode
 
 class InstructionWithoutArgumentExecutionStrategy : InstructionExecutionStrategy<Unit>
 {

@@ -5,7 +5,7 @@ import ro.dobrescuandrei.yaktnes.cpu.instruction.execution.strategy.InstructionE
 import ro.dobrescuandrei.yaktnes.cpu.instruction.execution.strategy.InstructionWithDecimalArgumentExecutionStrategy
 import ro.dobrescuandrei.yaktnes.cpu.instruction.execution.strategy.InstructionWithPointerArgumentExecutionStrategy
 import ro.dobrescuandrei.yaktnes.cpu.instruction.execution.strategy.InstructionWithoutArgumentExecutionStrategy
-import ro.dobrescuandrei.yaktnes.cpu.machine_code.MachineCode
+import ro.dobrescuandrei.yaktnes.cpu.MachineCode
 
 object InstructionExecutor
 {
