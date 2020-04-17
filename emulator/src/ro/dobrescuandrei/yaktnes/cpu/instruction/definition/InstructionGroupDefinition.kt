@@ -6,7 +6,7 @@ class InstructionGroupDefinition<ARG>
 (
     val name : String,
     val argumentType : Class<ARG>,
-    val execution : InstructionExecution<ARG>,
+    var execution : InstructionExecution<ARG>,
     val definitions : List<InstructionDefinition<ARG>>
 )
 {

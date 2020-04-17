@@ -3,8 +3,8 @@ package ro.dobrescuandrei.yaktnes.cpu
 import ro.dobrescuandrei.yaktnes.NES
 import ro.dobrescuandrei.yaktnes.cpu.datatype.Int8
 import ro.dobrescuandrei.yaktnes.cpu.datatype.Pointer
+import ro.dobrescuandrei.yaktnes.cpu.instruction.ProgramCounterDelta
 
-//todo temporary class used for testing, delete this
 class MachineCode
 (
     val code : ByteArray
@@ -22,7 +22,12 @@ class MachineCode
         return byte
     }
 
-    fun nextDecimal() : Int8
+    fun nextInt8() : Int8
+    {
+        return Int8(nextByte())
+    }
+
+    fun nextProgramCounterDelta() : ProgramCounterDelta
     {
         return Int8(nextByte())
     }

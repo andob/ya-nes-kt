@@ -8,20 +8,63 @@ import ro.dobrescuandrei.yaktnes.cpu.datatype.Pointer
 import ro.dobrescuandrei.yaktnes.cpu.instruction.addressing_mode.AddressingMode
 import ro.dobrescuandrei.yaktnes.cpu.instruction.definition.InstructionDefinitions
 import ro.dobrescuandrei.yaktnes.cpu.MachineCode
+import ro.dobrescuandrei.yaktnes.cpu.instruction.definition.InstructionDefinition
 
 class CPUInstructionsTests
 {
     private var machineCodeBytes = byteArrayOf()
+    private val loopedInstructionTesters = mutableListOf<LoopedInstructionTester>()
 
     @Before
     fun before() = NES.reset()
 
-    private fun exec(instructionName : String, addressingMode : AddressingMode, vararg arguments : Byte)
+    private fun exec(instructionName : String, addressingMode : AddressingMode, vararg arguments : Byte) : InstructionDefinition<Any>
     {
         val definition=InstructionDefinitions[instructionName, addressingMode]!!
         machineCodeBytes+=byteArrayOf(definition.id)
         machineCodeBytes+=arguments
-        NES.CPU.execute(MachineCode(machineCodeBytes))
+        val machineCode=MachineCode(machineCodeBytes)
+        NES.CPU.execute(machineCode)
+
+        //on branch, jump etc, there are instructions to run in the loop
+        while (machineCode.hasNextByte())
+            NES.CPU.execute(machineCode)
+
+        return definition
+    }
+
+    private class LoopedInstructionTester
+    {
+        val instructionDefinition : InstructionDefinition<Any>
+        val targetNumberOfTimesInstructionShouldBeExecuted : Int
+        var numberOfTimesInstructionWasExecuted = 1
+
+        constructor(instructionDefinition : InstructionDefinition<Any>, targetTimes : Int)
+        {
+            this.instructionDefinition=instructionDefinition
+            this.targetNumberOfTimesInstructionShouldBeExecuted=targetTimes
+
+            val originalExecution=instructionDefinition.groupDefinition.execution
+
+            instructionDefinition.groupDefinition.execution={ argument ->
+                originalExecution.invoke(argument)
+                numberOfTimesInstructionWasExecuted++
+            }
+        }
+
+        fun assert() = assertEquals(
+            numberOfTimesInstructionWasExecuted,
+            targetNumberOfTimesInstructionShouldBeExecuted)
+    }
+
+    private fun InstructionDefinition<Any>.shouldBeExecutedTwice() =
+        loopedInstructionTesters.add(LoopedInstructionTester(instructionDefinition = this, targetTimes = 2))
+
+    private fun InstructionDefinition<Any>.assertLoopExecution()
+    {
+        for (tester in loopedInstructionTesters)
+            tester.assert()
+        loopedInstructionTesters.clear()
     }
 
     @Test
@@ -409,5 +452,60 @@ class CPUInstructionsTests
         exec("ROL", AddressingMode.Accumulator)
         assertEquals(NES.CPU.A, Int8(0xAD.toByte()))
         assertEquals(NES.CPU.status.C, true)
+    }
+
+    @Test
+    fun testBranches()
+    {
+        println("Branch on equal")
+        exec("LDA", AddressingMode.Immediate, 0xB4.toByte())
+        exec("STA", AddressingMode.ZeroPage, 0x99.toByte())
+        exec("INC", AddressingMode.ZeroPage, 0x99.toByte()).shouldBeExecutedTwice()
+        exec("LDA", AddressingMode.Immediate, 0xB5.toByte()).shouldBeExecutedTwice()
+        exec("CMP", AddressingMode.ZeroPage, 0x99.toByte()).shouldBeExecutedTwice()
+        exec("BEQ", AddressingMode.Relative, 0xF8.toByte()).assertLoopExecution()
+        exec("LDA", AddressingMode.Immediate, 0xAA.toByte())
+        assertEquals(NES.CPU.A, Int8(0xAA.toByte()))
+
+        println("Branch on not equal")
+        exec("LDA", AddressingMode.Immediate, 0xAA.toByte())
+        exec("STA", AddressingMode.ZeroPage, 0x99.toByte())
+        exec("INC", AddressingMode.ZeroPage, 0x99.toByte()).shouldBeExecutedTwice()
+        exec("LDX", AddressingMode.ZeroPage, 0x99.toByte()).shouldBeExecutedTwice()
+        exec("CPX", AddressingMode.Immediate, 0xAC.toByte()).shouldBeExecutedTwice()
+        exec("BNE", AddressingMode.Relative, 0xF8.toByte()).assertLoopExecution()
+        exec("LDY", AddressingMode.Immediate, 0xBB.toByte())
+        assertEquals(NES.CPU.A, Int8(0xAA.toByte()))
+        assertEquals(NES.CPU.X, Int8(0xAC.toByte()))
+        assertEquals(NES.CPU.Y, Int8(0xBB.toByte()))
+
+        println("Branch on carry clear")
+        exec("LDA", AddressingMode.Immediate, 0xFD.toByte())
+        exec("STA", AddressingMode.ZeroPage, 0x99.toByte())
+        exec("LDA", AddressingMode.ZeroPage, 0x99.toByte()).shouldBeExecutedTwice()
+        exec("ADC", AddressingMode.Immediate, 0x01.toByte()).shouldBeExecutedTwice()
+        exec("STA", AddressingMode.ZeroPage, 0x99.toByte()).shouldBeExecutedTwice()
+        exec("BCC", AddressingMode.Relative, 0xF8.toByte()).assertLoopExecution()
+        assertEquals(NES.CPU.A, Int8(0x00))
+        assertEquals(NES.CPU.status.C, true)
+
+        TODO("test Branch on Carry Set")
+
+        println("Branch on minus")
+        exec("LDY", AddressingMode.Immediate, 0xAA.toByte())
+        exec("LDA", AddressingMode.Immediate, 0xAC.toByte())
+        exec("STA", AddressingMode.ZeroPage, 0x99.toByte())
+        exec("DEC", AddressingMode.ZeroPage, 0x99.toByte()).shouldBeExecutedTwice()
+        exec("CPY", AddressingMode.ZeroPage, 0x99.toByte()).shouldBeExecutedTwice()
+        exec("BMI", AddressingMode.Relative, 0xFA.toByte()).assertLoopExecution()
+        exec("LDY", AddressingMode.Immediate, 0xFF.toByte()).assertLoopExecution()
+        assertEquals(NES.CPU.A, Int8(0xAC.toByte()))
+        assertEquals(NES.CPU.Y, Int8(0xFF.toByte()))
+        assertEquals(NES.CPU.status.C, true)
+
+        TODO("test Branch on PLus")
+
+        TODO("test Branch on oVerflow Clear")
+        TODO("test Branch on oVerflow Set")
     }
 }

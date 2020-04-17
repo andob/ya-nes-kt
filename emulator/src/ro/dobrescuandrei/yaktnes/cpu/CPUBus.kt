@@ -19,18 +19,18 @@ class CPUBus
 
     private fun Pointer.toIndex() = toUInt().toInt().rem(0xFFFF)
 
-    operator fun get(address : Pointer) : Int8
+    operator fun get(pointer : Pointer) : Int8
     {
-        if (address is Pointer.ToAccumulator)
+        if (pointer is Pointer.ToAccumulator)
             return NES.CPU.A
 
-        return values[address.toIndex()]
+        return values[pointer.toIndex()]
     }
 
-    operator fun set(address : Pointer, value : Int8)
+    operator fun set(pointer : Pointer, value : Int8)
     {
-        if (address is Pointer.ToAccumulator)
+        if (pointer is Pointer.ToAccumulator)
             NES.CPU.A=value
-        else values[address.toIndex()]=value
+        else values[pointer.toIndex()]=value
     }
 }

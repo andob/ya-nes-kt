@@ -6,19 +6,27 @@ import ro.dobrescuandrei.yaktnes.cpu.datatype.Pointer
 import kotlin.experimental.inv
 
 //REFERENCE: http://www.6502.org/tutorials/6502opcodes.html
+//REFERENCE: http://www.obelisk.me.uk/6502/reference.html
 //CROSS-COMPILER: https://skilldrick.github.io/easy6502/
 
+//CODING CONVENTIONS:
+//1. All functions should use only local variables
+//   and variables from NES.CPU.*, NES.CPU_BUS.*
+//2. Do not declare static variables in this file
+
+typealias ProgramCounterDelta = Int8
+
 //ADC = ADd with Carry
-fun adc(value : Int8)
+internal fun adc(value : Int8)
 {
-    var sum = NES.CPU.A.toInt()+value.toUByte().toInt()
+    var sum = NES.CPU.A.toUByte().toInt()+value.toUByte().toInt()
 
     if (NES.CPU.status.C)
         sum++
 
+    NES.CPU.status.C = sum.shr(8)>0
     NES.CPU.status.N = sum.shr(7)==1
     NES.CPU.status.Z = sum==0
-    NES.CPU.status.C = sum.shr(8)>0
 
     //https://stackoverflow.com/a/29224684
     NES.CPU.status.V =
@@ -30,7 +38,7 @@ fun adc(value : Int8)
 }
 
 //AND = bitwise AND with accumulator
-fun and(value : Int8)
+internal fun and(value : Int8)
 {
     val result = NES.CPU.A.toInt().and(value.toInt())
 
@@ -41,7 +49,7 @@ fun and(value : Int8)
 }
 
 //ASL = Arithmetic Shift Left
-fun asl(pointer : Pointer)
+internal fun asl(pointer : Pointer)
 {
     val inputValue = NES.CPU_BUS[pointer]
     val shiftedValue = inputValue.toInt().and(0xff).shl(1)
@@ -54,122 +62,136 @@ fun asl(pointer : Pointer)
 }
 
 //BCC = Branch on Carry Clear
-fun bcc()
+internal fun bcc(delta : ProgramCounterDelta)
 {
-    TODO()
+    if (!NES.CPU.status.C)
+        NES.CPU.programCounter+=delta.toInt()
 }
 
 //BCS = Branch on Carry Set
-fun bcs()
+internal fun bcs(delta : ProgramCounterDelta)
 {
-    TODO()
+    if (NES.CPU.status.C)
+        NES.CPU.programCounter+=delta.toInt()
 }
 
 //BEQ = Branch on EQual
-fun beq()
+internal fun beq(delta : ProgramCounterDelta)
 {
-    TODO()
+    if (NES.CPU.status.Z)
+        NES.CPU.programCounter+=delta.toInt()
 }
 
 //BIT = test BITs
-fun bit(address : Pointer)
+internal fun bit(pointer : Pointer)
 {
     TODO()
 }
 
 //BMI = Branch on MInus
-fun bmi()
+internal fun bmi(delta : ProgramCounterDelta)
 {
-    TODO()
+    if (NES.CPU.status.N)
+        NES.CPU.programCounter+=delta.toInt()
 }
 
 //BNE = Branch on Not Equal
-fun bne()
+internal fun bne(delta : ProgramCounterDelta)
 {
-    TODO()
+    if (!NES.CPU.status.Z)
+        NES.CPU.programCounter+=delta.toInt()
 }
 
 //BPL = Branch on PLus
-fun bpl()
+internal fun bpl(delta : ProgramCounterDelta)
 {
-    TODO()
+    if (!NES.CPU.status.N)
+        NES.CPU.programCounter+=delta.toInt()
 }
 
 //BRK = BReaK
-fun brk()
+internal fun brk()
 {
     TODO()
 }
 
 //BVC = Branch on oVerflow Clear
-fun bvc()
+internal fun bvc(delta : ProgramCounterDelta)
 {
-    TODO()
+    if (!NES.CPU.status.V)
+        NES.CPU.programCounter+=delta.toInt()
 }
 
 //BVS = Branch on oVerflow Set
-fun bvs()
+internal fun bvs(delta : ProgramCounterDelta)
 {
-    TODO()
+    if (NES.CPU.status.V)
+        NES.CPU.programCounter+=delta.toInt()
 }
 
 //CLC = CLear Carry
-fun clc()
+internal fun clc()
 {
     NES.CPU.status.C = false
 }
 
 //CLD = CLear Decimal
 //NES doesn't support Decimal Mode
-fun cld() {}
+internal fun cld() {}
 
 //CLI = CLear Interrupt
-fun cli()
+internal fun cli()
 {
     TODO()
 }
 
 //CLV = CLear oVerflow
-fun clv()
+internal fun clv()
 {
     NES.CPU.status.V = false
 }
 
 //CMP = CoMPare accumulator
-fun cmp(value : Int8)
+internal fun cmp(value : Int8)
 {
-    TODO()
+    NES.CPU.status.C = NES.CPU.A>=value
+    NES.CPU.status.Z = NES.CPU.A==value
+    NES.CPU.status.N = NES.CPU.A<value
 }
 
 //CPX = ComPare X register
-fun cpx(value : Int8)
+internal fun cpx(value : Int8)
 {
-    TODO()
+    NES.CPU.status.C = NES.CPU.X>=value
+    NES.CPU.status.Z = NES.CPU.X==value
+    NES.CPU.status.N = NES.CPU.X<value
 }
 
 //CPY = ComPare Y register
-fun cpy(value : Int8)
+internal fun cpy(value : Int8)
 {
-    TODO()
+    NES.CPU.status.C = NES.CPU.Y>=value
+    NES.CPU.status.Z = NES.CPU.Y==value
+    NES.CPU.status.N = NES.CPU.Y<value
 }
 
 //DEC = DECrement memory
-fun dec(address : Pointer)
+internal fun dec(pointer : Pointer)
 {
-    NES.CPU_BUS[address]--
+    NES.CPU_BUS[pointer]--
 
-    NES.CPU.status.N = NES.CPU_BUS[address]<0
-    NES.CPU.status.Z = NES.CPU_BUS[address].isNil()
+    NES.CPU.status.N = NES.CPU_BUS[pointer]<0
+    NES.CPU.status.Z = NES.CPU_BUS[pointer].isNil()
 }
 
 //DEX = DEcrement X
-fun dex() = ldx(NES.CPU.X-Int8(1))
+internal fun dex() = ldx(NES.CPU.X-Int8(1))
 
 //DEY = DEcrement Y
-fun dey() = ldy(NES.CPU.Y-Int8(1))
+internal fun dey() = ldy(NES.CPU.Y-Int8(1))
 
 //EOR = bitwise XOR
-fun eor(value : Int8)
+internal fun eor(value : Int8)
 {
     val result = NES.CPU.A.toInt().xor(value.toInt())
 
@@ -180,34 +202,34 @@ fun eor(value : Int8)
 }
 
 //INC = INCrement memory
-fun inc(address : Pointer)
+internal fun inc(pointer : Pointer)
 {
-    NES.CPU_BUS[address]++
+    NES.CPU_BUS[pointer]++
 
-    NES.CPU.status.N = NES.CPU_BUS[address]<0
-    NES.CPU.status.Z = NES.CPU_BUS[address].isNil()
+    NES.CPU.status.N = NES.CPU_BUS[pointer]<0
+    NES.CPU.status.Z = NES.CPU_BUS[pointer].isNil()
 }
 
 //INX = INcrement X
-fun inx() = ldx(NES.CPU.X+Int8(1))
+internal fun inx() = ldx(NES.CPU.X+Int8(1))
 
 //INY = INcrement Y
-fun iny() = ldy(NES.CPU.Y+Int8(1))
+internal fun iny() = ldy(NES.CPU.Y+Int8(1))
 
 //JMP = JuMP
-fun jmp(address : Pointer)
+internal fun jmp(pointer : Pointer)
 {
     TODO()
 }
 
 //JSR = Jump to SubRoutine
-fun jsr(address : Pointer)
+internal fun jsr(pointer : Pointer)
 {
     TODO()
 }
 
 //LDA = LoaD Accumulator
-fun lda(value : Int8)
+internal fun lda(value : Int8)
 {
     NES.CPU.A = value
 
@@ -216,7 +238,7 @@ fun lda(value : Int8)
 }
 
 //LDX = LoaD register X
-fun ldx(value : Int8)
+internal fun ldx(value : Int8)
 {
     NES.CPU.X = value
 
@@ -225,7 +247,7 @@ fun ldx(value : Int8)
 }
 
 //LDY = LoaD register Y
-fun ldy(value : Int8)
+internal fun ldy(value : Int8)
 {
     NES.CPU.Y = value
 
@@ -234,7 +256,7 @@ fun ldy(value : Int8)
 }
 
 //LSR = Logical Shift Right
-fun lsr(pointer : Pointer)
+internal fun lsr(pointer : Pointer)
 {
     val inputValue = NES.CPU_BUS[pointer]
     val shiftedValue = inputValue.toInt().and(0xff).shr(1)
@@ -247,10 +269,10 @@ fun lsr(pointer : Pointer)
 }
 
 //NOP = No OPeration
-fun nop() {}
+internal fun nop() {}
 
 //ODA = bitwise OR with Accumulator
-fun ora(value : Int8)
+internal fun ora(value : Int8)
 {
     val result = NES.CPU.A.toInt().or(value.toInt())
 
@@ -261,31 +283,31 @@ fun ora(value : Int8)
 }
 
 //PHA = PusH Accumulator
-fun pha()
+internal fun pha()
 {
     TODO()
 }
 
 //PHP = PusH Processor status
-fun php()
+internal fun php()
 {
     TODO()
 }
 
 //PLA = PuLl Accumulator
-fun pla()
+internal fun pla()
 {
     TODO()
 }
 
 //PLP = PuLl Processor status
-fun plp()
+internal fun plp()
 {
     TODO()
 }
 
 //ROL = ROtate Left
-fun rol(pointer : Pointer)
+internal fun rol(pointer : Pointer)
 {
     //shift left
     asl(pointer)
@@ -296,7 +318,7 @@ fun rol(pointer : Pointer)
 }
 
 //ROR = ROtate Right
-fun ror(pointer : Pointer)
+internal fun ror(pointer : Pointer)
 {
     //shift right
     lsr(pointer)
@@ -307,78 +329,78 @@ fun ror(pointer : Pointer)
 }
 
 //RTI = ReTurn from Interrupt
-fun rti()
+internal fun rti()
 {
     TODO()
 }
 
 //RTS = ReTurn from Subroutine
-fun rts()
+internal fun rts()
 {
     TODO()
 }
 
 //SBC = SuBstract with Carry
-fun sbc(value : Int8)
+internal fun sbc(value : Int8)
 {
     //Just bitwise invert the number: x-y = x+(-y)
     adc(Int8(value.toByte().inv()))
 }
 
 //SEC = SEt Carry
-fun sec()
+internal fun sec()
 {
     NES.CPU.status.C = true
 }
 
 //SED = SEt Decimal
 //NES doesn't support Decimal Mode
-fun sed() {}
+internal fun sed() {}
 
 //SEI = SEt Interrupt
-fun sei()
+internal fun sei()
 {
     TODO()
 }
 
 //STA = STore Accumulator
-fun sta(address : Pointer)
+internal fun sta(pointer : Pointer)
 {
-    NES.CPU_BUS[address] = NES.CPU.A
+    NES.CPU_BUS[pointer] = NES.CPU.A
 }
 
 //STX = STore register X
-fun stx(address : Pointer)
+internal fun stx(pointer : Pointer)
 {
-    NES.CPU_BUS[address] = NES.CPU.X
+    NES.CPU_BUS[pointer] = NES.CPU.X
 }
 
 //STY = STore register Y
-fun sty(address : Pointer)
+internal fun sty(pointer : Pointer)
 {
-    NES.CPU_BUS[address] = NES.CPU.Y
+    NES.CPU_BUS[pointer] = NES.CPU.Y
 }
 
 //TAX = Transfer A to X
-fun tax() = ldx(NES.CPU.A)
+internal fun tax() = ldx(NES.CPU.A)
 
 //TAY = Transfer A to Y
-fun tay() = ldy(NES.CPU.A)
+internal fun tay() = ldy(NES.CPU.A)
 
 //TSX = Transfer Stack pointer to X
-fun tsx()
+internal fun tsx()
 {
     TODO()
 }
 
 //TXA = Transfer X to A
-fun txa() = lda(NES.CPU.X)
+internal fun txa() = lda(NES.CPU.X)
 
 //TXS = Transfer X to Stack pointer
-fun txs()
+internal fun txs()
 {
     TODO()
 }
 
 //TYA = Transfer Y to A
-fun tya() = lda(NES.CPU.Y)
+internal fun tya() = lda(NES.CPU.Y)

@@ -26,6 +26,6 @@ enum class AddressingMode
     IndirectX,
     IndirectY,
 
-    //todo add documentation comment
+    //argument = a delta (ex: +5, -3)
     Relative
 }

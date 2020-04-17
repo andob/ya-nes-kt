@@ -16,13 +16,13 @@ object InstructionArgumentFactory
             AddressingMode.Immediate ->
             {
                 //the argument is a constant
-                return machineCode.nextDecimal()
+                return machineCode.nextInt8()
             }
 
             AddressingMode.Relative ->
             {
-                //todo this surely is wrong
-                return machineCode.nextDecimal()
+                //the argument is a delta (ex: +5, -3)
+                return machineCode.nextProgramCounterDelta()
             }
 
             AddressingMode.ZeroPage,

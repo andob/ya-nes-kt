@@ -10,7 +10,7 @@ class CPU
     var X  = Int8(0x00)  //the X register
     var Y  = Int8(0x00)  //the Y register
 
-    var programCounter = 0
+    var programCounter = 0x00
 
     val status = Status()
 
