@@ -1,5 +1,6 @@
 package ro.dobrescuandrei.yaktnes.cpu
 
+import ro.dobrescuandrei.yaktnes.NES
 import ro.dobrescuandrei.yaktnes.cpu.datatype.Int8
 import ro.dobrescuandrei.yaktnes.cpu.datatype.Pointer
 import kotlin.random.Random
@@ -16,13 +17,20 @@ class CPUBus
             values[index]=Int8(randomizer.nextBytes(size = 1).first())
     }
 
+    private fun Pointer.toIndex() = toUInt().toInt().rem(0xFFFF)
+
     operator fun get(address : Pointer) : Int8
     {
-        return values[address.toInt()]
+        if (address is Pointer.ToAccumulator)
+            return NES.CPU.A
+
+        return values[address.toIndex()]
     }
 
     operator fun set(address : Pointer, value : Int8)
     {
-        values[address.toInt()]=value
+        if (address is Pointer.ToAccumulator)
+            NES.CPU.A=value
+        else values[address.toIndex()]=value
     }
 }

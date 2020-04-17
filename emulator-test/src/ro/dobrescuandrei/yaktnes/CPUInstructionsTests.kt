@@ -257,4 +257,157 @@ class CPUInstructionsTests
         assertEquals(NES.CPU.X, Int8(0x00))
         assertEquals(NES.CPU.status.V, false)
     }
+
+    @Test
+    fun testIncrementAndDecrementMemoryInstructions()
+    {
+        println("load 0x11 into 0x99, increment memory, decrement memory")
+        exec("LDA", AddressingMode.Immediate, 0x11)
+        exec("STA", AddressingMode.ZeroPage, 0x99.toByte())
+        exec("INC", AddressingMode.ZeroPage, 0x99.toByte())
+        assertEquals(NES.CPU_BUS[Pointer(0x0099.toUShort())], Int8(0x12))
+        exec("DEC", AddressingMode.ZeroPage, 0x99.toByte())
+        assertEquals(NES.CPU_BUS[Pointer(0x0099.toUShort())], Int8(0x11))
+
+        println("load 0x00 into 0x99, decrement memory, increment memory")
+        exec("LDA", AddressingMode.Immediate, 0x00)
+        exec("STA", AddressingMode.ZeroPage, 0x99.toByte())
+        exec("DEC", AddressingMode.ZeroPage, 0x99.toByte())
+        assertEquals(NES.CPU_BUS[Pointer(0x0099.toUShort())], Int8(0xFF.toByte()))
+        exec("INC", AddressingMode.ZeroPage, 0x99.toByte())
+        assertEquals(NES.CPU_BUS[Pointer(0x0099.toUShort())], Int8(0x00))
+    }
+
+    @Test
+    fun testAddAndSubstractWithCarryInstructions()
+    {
+        println("Add without carry: 0x05 + 0x05 = 0x0A")
+        exec("LDA", AddressingMode.Immediate, 0x05)
+        exec("ADC", AddressingMode.Immediate, 0x05)
+        assertEquals(NES.CPU.A, Int8(0x0A))
+        assertEquals(NES.CPU.status.C, false)
+        assertEquals(NES.CPU.status.V, false)
+
+        println("Add with carry: 0x40 + 0xff = 0x3f + CARRY 1")
+        exec("LDA", AddressingMode.Immediate, 0x40)
+        exec("ADC", AddressingMode.Immediate, 0xff.toByte())
+        assertEquals(NES.CPU.A, Int8(0x3f))
+        assertEquals(NES.CPU.status.C, true)
+        assertEquals(NES.CPU.status.V, false)
+
+        println("Let's use the carry flag: 0x3f + 0x02 + CARRY 1 = 0x41 + CARRY 1 = 0x42")
+        exec("ADC", AddressingMode.Immediate, 0x02)
+        assertEquals(NES.CPU.A, Int8(0x42))
+        assertEquals(NES.CPU.status.C, false)
+        assertEquals(NES.CPU.status.V, false)
+
+        println("Add with overflow: 0x7F + 0x01 = 0x80 + OVERFLOW")
+        exec("LDA", AddressingMode.Immediate, 0x7F)
+        exec("ADC", AddressingMode.Immediate, 0x01)
+        assertEquals(NES.CPU.A, Int8(0x80.toByte()))
+        assertEquals(NES.CPU.status.C, false)
+        assertEquals(NES.CPU.status.V, true)
+
+        println("Test substract with carry: 0x05 - 0x03 - 1 = 0x01 + CARRY 1")
+        exec("LDA", AddressingMode.Immediate, 0x05)
+        exec("SBC", AddressingMode.Immediate, 0x03)
+        assertEquals(NES.CPU.A, Int8(0x01.toByte()))
+        assertEquals(NES.CPU.status.N, false)
+        assertEquals(NES.CPU.status.C, true)
+        assertEquals(NES.CPU.status.V, false)
+
+        println("Clearing carry")
+        exec("CLC", AddressingMode.Implicit)
+
+        println("Test substract with carry: 0x05 - 0x05 - 1 = 0xFF")
+        exec("LDA", AddressingMode.Immediate, 0x05)
+        exec("SBC", AddressingMode.Immediate, 0x05)
+        assertEquals(NES.CPU.A, Int8(0xFF.toByte()))
+        assertEquals(NES.CPU.status.N, true)
+        assertEquals(NES.CPU.status.C, false)
+        assertEquals(NES.CPU.status.V, false)
+    }
+
+    @Test
+    fun testBitwiseOperations()
+    {
+        println("Bitwise AND: 0x05 AND 0x41 = 0x01")
+        exec("LDA", AddressingMode.Immediate, 0x05)
+        exec("AND", AddressingMode.Immediate, 0x41)
+        assertEquals(NES.CPU.A, Int8(0x01))
+
+        println("Bitwise XOR: 0x05 XOR 0x41 = 0x44")
+        exec("LDA", AddressingMode.Immediate, 0x05)
+        exec("EOR", AddressingMode.Immediate, 0x41)
+        assertEquals(NES.CPU.A, Int8(0x44))
+
+        println("Bitwise ORA: 0x05 OR 0x41 = 0x45")
+        exec("LDA", AddressingMode.Immediate, 0x05)
+        exec("ORA", AddressingMode.Immediate, 0x41)
+        assertEquals(NES.CPU.A, Int8(0x45))
+
+        println("Bitwise shift left: 0x05 << 1 = 0x0A")
+        exec("LDA", AddressingMode.Immediate, 0x05)
+        exec("ASL", AddressingMode.Accumulator)
+        assertEquals(NES.CPU.A, Int8(0x0A))
+        assertEquals(NES.CPU.status.C, false)
+
+        println("Bitwise shift left: 0xFF << 1 = 0xFE + CARRY 1")
+        exec("LDA", AddressingMode.Immediate, 0xFF.toByte())
+        exec("ASL", AddressingMode.Accumulator)
+        assertEquals(NES.CPU.A, Int8(0xFE.toByte()))
+        assertEquals(NES.CPU.status.C, true)
+
+        println("Bitwise shift left: 0x07 << 1 = 0x0E")
+        exec("LDA", AddressingMode.Immediate, 0x07)
+        exec("STA", AddressingMode.ZeroPage, 0x99.toByte())
+        exec("ASL", AddressingMode.ZeroPage, 0x99.toByte())
+        exec("LDA", AddressingMode.ZeroPage, 0x99.toByte())
+        assertEquals(NES.CPU.A, Int8(0x0E.toByte()))
+        assertEquals(NES.CPU.status.C, false)
+
+        println("Bitwise shift left: 0xFF << 1 = 0xFE + CARRY 1")
+        exec("LDA", AddressingMode.Immediate, 0xFF.toByte())
+        exec("STA", AddressingMode.ZeroPage, 0x99.toByte())
+        exec("ASL", AddressingMode.ZeroPage, 0x99.toByte())
+        exec("LDA", AddressingMode.ZeroPage, 0x99.toByte())
+        assertEquals(NES.CPU.A, Int8(0xFE.toByte()))
+        assertEquals(NES.CPU.status.C, true)
+
+        println("Bitwise shift right: 0x05 >> 1 = 0x02 + CARRY 1")
+        exec("LDA", AddressingMode.Immediate, 0x05)
+        exec("LSR", AddressingMode.Accumulator)
+        assertEquals(NES.CPU.A, Int8(0x02))
+        assertEquals(NES.CPU.status.C, true)
+
+        println("Bitwise shift right: 0xFF >> 1 = 0x7F + CARRY 1")
+        exec("LDA", AddressingMode.Immediate, 0xFF.toByte())
+        exec("STA", AddressingMode.ZeroPage, 0x99.toByte())
+        exec("LSR", AddressingMode.ZeroPage, 0x99.toByte())
+        exec("LDA", AddressingMode.ZeroPage, 0x99.toByte())
+        assertEquals(NES.CPU.A, Int8(0x7F))
+        assertEquals(NES.CPU.status.C, true)
+
+        println("Bitwise shift right: 0x1E >> 1 = 0x0F")
+        exec("LDA", AddressingMode.Immediate, 0x1E)
+        exec("LSR", AddressingMode.Accumulator)
+        assertEquals(NES.CPU.A, Int8(0x0F))
+        assertEquals(NES.CPU.status.C, false)
+
+        println("Rotate right: B5 >>< 3 = B6")
+        exec("LDA", AddressingMode.Immediate, 0xB5.toByte())
+        exec("ROR", AddressingMode.Accumulator)
+        exec("ROR", AddressingMode.Accumulator)
+        exec("ROR", AddressingMode.Accumulator)
+        assertEquals(NES.CPU.A, Int8(0xB6.toByte()))
+        assertEquals(NES.CPU.status.C, true)
+
+        println("Rotate left: B5 <<> 3 = AD")
+        exec("LDA", AddressingMode.Immediate, 0xB5.toByte())
+        exec("ROL", AddressingMode.Accumulator)
+        exec("ROL", AddressingMode.Accumulator)
+        exec("ROL", AddressingMode.Accumulator)
+        assertEquals(NES.CPU.A, Int8(0xAD.toByte()))
+        assertEquals(NES.CPU.status.C, true)
+    }
 }

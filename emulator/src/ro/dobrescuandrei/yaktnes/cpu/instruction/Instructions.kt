@@ -1,9 +1,9 @@
 package ro.dobrescuandrei.yaktnes.cpu.instruction
 
 import ro.dobrescuandrei.yaktnes.NES
-import ro.dobrescuandrei.yaktnes.cpu.CPU
 import ro.dobrescuandrei.yaktnes.cpu.datatype.Int8
 import ro.dobrescuandrei.yaktnes.cpu.datatype.Pointer
+import kotlin.experimental.inv
 
 //REFERENCE: http://www.6502.org/tutorials/6502opcodes.html
 //CROSS-COMPILER: https://skilldrick.github.io/easy6502/
@@ -11,26 +11,46 @@ import ro.dobrescuandrei.yaktnes.cpu.datatype.Pointer
 //ADC = ADd with Carry
 fun adc(value : Int8)
 {
-    TODO()
+    var sum = NES.CPU.A.toInt()+value.toUByte().toInt()
+
+    if (NES.CPU.status.C)
+        sum++
+
+    NES.CPU.status.N = sum.shr(7)==1
+    NES.CPU.status.Z = sum==0
+    NES.CPU.status.C = sum.shr(8)>0
+
+    //https://stackoverflow.com/a/29224684
+    NES.CPU.status.V =
+        NES.CPU.A.toInt().xor(value.toInt()).inv()
+            .and(NES.CPU.A.toInt().xor(sum))
+            .and(0x80)>0
+
+    NES.CPU.A = Int8(sum.and(0xff).toByte())
 }
 
 //AND = bitwise AND with accumulator
 fun and(value : Int8)
 {
-    TODO()
+    val result = NES.CPU.A.toInt().and(value.toInt())
+
+    NES.CPU.status.N = result<0
+    NES.CPU.status.Z = result==0
+
+    NES.CPU.A = Int8(result.toByte())
 }
 
 //ASL = Arithmetic Shift Left
-fun asl(address : Pointer)
+fun asl(pointer : Pointer)
 {
-    if (address is Pointer.ToAccumulator)
-    {
-        TODO()
-    }
-    else
-    {
-        TODO()
-    }
+    val inputValue = NES.CPU_BUS[pointer]
+    val shiftedValue = inputValue.toInt().and(0xff).shl(1)
+    val outputValue = Int8(shiftedValue.and(0xff).toByte())
+    NES.CPU_BUS[pointer] = outputValue
+
+    NES.CPU.status.N = outputValue<0
+    NES.CPU.status.Z = outputValue.isNil()
+    NES.CPU.status.C = shiftedValue.shr(8)>0
 }
 
 //BCC = Branch on Carry Clear
@@ -96,14 +116,12 @@ fun bvs()
 //CLC = CLear Carry
 fun clc()
 {
-    TODO()
+    NES.CPU.status.C = false
 }
 
 //CLD = CLear Decimal
-fun cld()
-{
-    TODO()
-}
+//NES doesn't support Decimal Mode
+fun cld() {}
 
 //CLI = CLear Interrupt
 fun cli()
@@ -114,7 +132,7 @@ fun cli()
 //CLV = CLear oVerflow
 fun clv()
 {
-    TODO()
+    NES.CPU.status.V = false
 }
 
 //CMP = CoMPare accumulator
@@ -138,7 +156,10 @@ fun cpy(value : Int8)
 //DEC = DECrement memory
 fun dec(address : Pointer)
 {
-    TODO()
+    NES.CPU_BUS[address]--
+
+    NES.CPU.status.N = NES.CPU_BUS[address]<0
+    NES.CPU.status.Z = NES.CPU_BUS[address].isNil()
 }
 
 //DEX = DEcrement X
@@ -150,13 +171,21 @@ fun dey() = ldy(NES.CPU.Y-Int8(1))
 //EOR = bitwise XOR
 fun eor(value : Int8)
 {
-    TODO()
+    val result = NES.CPU.A.toInt().xor(value.toInt())
+
+    NES.CPU.status.N = result<0
+    NES.CPU.status.Z = result==0
+
+    NES.CPU.A = Int8(result.toByte())
 }
 
 //INC = INCrement memory
 fun inc(address : Pointer)
 {
-    TODO()
+    NES.CPU_BUS[address]++
+
+    NES.CPU.status.N = NES.CPU_BUS[address]<0
+    NES.CPU.status.Z = NES.CPU_BUS[address].isNil()
 }
 
 //INX = INcrement X
@@ -182,9 +211,8 @@ fun lda(value : Int8)
 {
     NES.CPU.A = value
 
-    NES.CPU.status = CPU.Status(
-        N = value<0,
-        Z = value.isNil())
+    NES.CPU.status.N = value<0
+    NES.CPU.status.Z = value.isNil()
 }
 
 //LDX = LoaD register X
@@ -192,9 +220,8 @@ fun ldx(value : Int8)
 {
     NES.CPU.X = value
 
-    NES.CPU.status = CPU.Status(
-        N = value<0,
-        Z = value.isNil())
+    NES.CPU.status.N = value<0
+    NES.CPU.status.N = value.isNil()
 }
 
 //LDY = LoaD register Y
@@ -202,22 +229,21 @@ fun ldy(value : Int8)
 {
     NES.CPU.Y = value
 
-    NES.CPU.status = CPU.Status(
-        N = value<0,
-        Z = value.isNil())
+    NES.CPU.status.N = value<0
+    NES.CPU.status.Z = value.isNil()
 }
 
 //LSR = Logical Shift Right
-fun lsr(address : Pointer)
+fun lsr(pointer : Pointer)
 {
-    if (address is Pointer.ToAccumulator)
-    {
-        TODO()
-    }
-    else
-    {
-        TODO()
-    }
+    val inputValue = NES.CPU_BUS[pointer]
+    val shiftedValue = inputValue.toInt().and(0xff).shr(1)
+    val outputValue = Int8(shiftedValue.and(0xff).toByte())
+    NES.CPU_BUS[pointer] = outputValue
+
+    NES.CPU.status.N = outputValue<0
+    NES.CPU.status.Z = outputValue.isNil()
+    NES.CPU.status.C = inputValue.toInt().and(1)>0
 }
 
 //NOP = No OPeration
@@ -226,7 +252,12 @@ fun nop() {}
 //ODA = bitwise OR with Accumulator
 fun ora(value : Int8)
 {
-    TODO()
+    val result = NES.CPU.A.toInt().or(value.toInt())
+
+    NES.CPU.status.N = result<0
+    NES.CPU.status.Z = result==0
+
+    NES.CPU.A = Int8(result.toByte())
 }
 
 //PHA = PusH Accumulator
@@ -254,29 +285,25 @@ fun plp()
 }
 
 //ROL = ROtate Left
-fun rol(address : Pointer)
+fun rol(pointer : Pointer)
 {
-    if (address is Pointer.ToAccumulator)
-    {
-        TODO()
-    }
-    else
-    {
-        TODO()
-    }
+    //shift left
+    asl(pointer)
+
+    //rotate shifted byte
+    if (NES.CPU.status.C)
+        NES.CPU_BUS[pointer] = Int8(NES.CPU_BUS[pointer].toInt().or(0x01).toByte())
 }
 
 //ROR = ROtate Right
-fun ror(address : Pointer)
+fun ror(pointer : Pointer)
 {
-    if (address is Pointer.ToAccumulator)
-    {
-        TODO()
-    }
-    else
-    {
-        TODO()
-    }
+    //shift right
+    lsr(pointer)
+
+    //rotate shifted byte
+    if (NES.CPU.status.C)
+        NES.CPU_BUS[pointer] = Int8(NES.CPU_BUS[pointer].toInt().or(0x80).toByte())
 }
 
 //RTI = ReTurn from Interrupt
@@ -294,20 +321,19 @@ fun rts()
 //SBC = SuBstract with Carry
 fun sbc(value : Int8)
 {
-    TODO()
+    //Just bitwise invert the number: x-y = x+(-y)
+    adc(Int8(value.toByte().inv()))
 }
 
 //SEC = SEt Carry
 fun sec()
 {
-    TODO()
+    NES.CPU.status.C = true
 }
 
 //SED = SEt Decimal
-fun sed()
-{
-    TODO()
-}
+//NES doesn't support Decimal Mode
+fun sed() {}
 
 //SEI = SEt Interrupt
 fun sei()

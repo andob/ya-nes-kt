@@ -2,7 +2,7 @@ package ro.dobrescuandrei.yaktnes.cpu.datatype
 
 class Int8
 (
-    //8-bit unsigned int
+    //8-bit signed or unsigned int
     private var value : Byte
 )
 {
@@ -31,8 +31,14 @@ class Int8
     operator fun dec() = Int8(value.dec())
     operator fun inc() = Int8(value.inc())
 
-    override fun toString() = "Decimal($value)"
     fun toUInt() = value.toUInt()
     fun toInt() = value.toInt()
+    fun toUShort() = value.toUShort()
+    fun toShort() = value.toShort()
+    fun toUByte() = value.toUByte()
     fun toByte() = value
+
+    override fun toString() =
+        "Int8: DEC: $value, "+
+        "HEX: ${String.format("%02x", value)}"
 }

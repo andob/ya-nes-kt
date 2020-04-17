@@ -26,10 +26,13 @@ open class Pointer
     operator fun inc() = Pointer(address.inc())
     operator fun dec() = Pointer(address.dec())
 
-    override fun toString() = "Pointer($address)"
     fun toUShort() = address.toUShort()
     fun toUInt() = address.toUInt()
     fun toInt() = toUInt().toInt()
+
+    override fun toString() =
+        "Pointer: DEC: $address, "+
+        "HEX: ${String.format("%02x", address)}"
 
     //special type of Pointer - the operation should be applied on CPU accumulator
     class ToAccumulator : Pointer(0xffff.toUShort())

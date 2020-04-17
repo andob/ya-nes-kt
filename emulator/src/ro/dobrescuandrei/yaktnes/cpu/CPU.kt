@@ -12,16 +12,16 @@ class CPU
 
     var programCounter = 0
 
-    var status = Status()
+    val status = Status()
 
     data class Status
     (
-        val C : Boolean = false, //is carry mode enabled?
-        val Z : Boolean = false, //was last result zero?
-        val I : Boolean = false, //should disable interrupts?
-        val B : Boolean = false, //should break?
-        val V : Boolean = false, //last result caused an overflow?
-        val N : Boolean = false  //was last result negative?
+        var C : Boolean = false, //is carry mode enabled?
+        var Z : Boolean = false, //was last result zero?
+        var I : Boolean = false, //should disable interrupts?
+        var B : Boolean = false, //should break?
+        var V : Boolean = false, //last result caused an overflow?
+        var N : Boolean = false  //was last result negative?
     )
 
     fun execute(machineCode : MachineCode)
