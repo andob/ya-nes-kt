@@ -3,18 +3,19 @@ package ro.dobrescuandrei.yaktnes.cpu
 import ro.dobrescuandrei.yaktnes.NES
 import ro.dobrescuandrei.yaktnes.cpu.datatype.Int8
 import ro.dobrescuandrei.yaktnes.cpu.datatype.Pointer
+import ro.dobrescuandrei.yaktnes.cpu.datatype.toInt8
 import kotlin.random.Random
 
 class CPUBus
 {
     //64KB of RAM -> 0x0000 -> 0xFFFF
-    private val values = Array<Int8>(size = 0xFFFF, init = { Int8(0x00) })
+    private val values = Array(size = 0xFFFF, init = { Int8.Zero })
 
     init
     {
         val randomizer=Random(System.currentTimeMillis())
         for (index in values.indices)
-            values[index]=Int8(randomizer.nextBytes(size = 1).first())
+            values[index]=randomizer.nextBytes(size = 1).first().toInt8()
     }
 
     private fun Pointer.toIndex() = toUInt().toInt().rem(0xFFFF)

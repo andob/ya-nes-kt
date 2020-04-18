@@ -1,18 +1,16 @@
 package ro.dobrescuandrei.yaktnes.cpu.instruction.execution
 
 import ro.dobrescuandrei.yaktnes.cpu.instruction.definition.InstructionDefinition
-import ro.dobrescuandrei.yaktnes.cpu.instruction.execution.strategy.InstructionExecutionStrategy
-import ro.dobrescuandrei.yaktnes.cpu.instruction.execution.strategy.InstructionWithInt8ArgumentExecutionStrategy
-import ro.dobrescuandrei.yaktnes.cpu.instruction.execution.strategy.InstructionWithPointerArgumentExecutionStrategy
-import ro.dobrescuandrei.yaktnes.cpu.instruction.execution.strategy.InstructionWithoutArgumentExecutionStrategy
 import ro.dobrescuandrei.yaktnes.cpu.MachineCode
+import ro.dobrescuandrei.yaktnes.cpu.instruction.execution.strategy.*
 
 object InstructionExecutor
 {
     private val strategies = listOf(
         InstructionWithoutArgumentExecutionStrategy(),
         InstructionWithInt8ArgumentExecutionStrategy(),
-        InstructionWithPointerArgumentExecutionStrategy()
+        InstructionWithPointerArgumentExecutionStrategy(),
+        InstructionWithPointerToMachineCodeArgumentExecutionStrategy()
     ) as List<InstructionExecutionStrategy<*>>
 
     fun executeInstruction(definition : InstructionDefinition<Any>, machineCode : MachineCode)

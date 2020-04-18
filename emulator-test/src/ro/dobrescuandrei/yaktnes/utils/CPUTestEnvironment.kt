@@ -9,6 +9,8 @@ import ro.dobrescuandrei.yaktnes.cpu.instruction.definition.InstructionDefinitio
 
 fun withCPUTestEnvironment(block : CPUTestEnvironment.() -> (Unit))
 {
+    NES.reset()
+
     block(CPUTestEnvironment())
 }
 
@@ -91,5 +93,24 @@ class CPUTestEnvironment
             NES.CPU.execute(machineCode)
 
         return InstructionExecutionTestEnvironment(definition)
+    }
+
+    fun assemble(sourceCodeProvider : AssemblerContext.() -> (Unit)) : MachineCode
+    {
+        val assemblerContext=AssemblerContext()
+        sourceCodeProvider.invoke(assemblerContext)
+        return MachineCode(assemblerContext.machineCodeBytes)
+    }
+
+    class AssemblerContext
+    {
+        var machineCodeBytes = byteArrayOf()
+
+        fun asm(instructionName : String, addressingMode : AddressingMode, vararg arguments : Byte)
+        {
+            val definition=InstructionDefinitions[instructionName, addressingMode]!!
+            machineCodeBytes+=byteArrayOf(definition.id)
+            machineCodeBytes+=arguments
+        }
     }
 }

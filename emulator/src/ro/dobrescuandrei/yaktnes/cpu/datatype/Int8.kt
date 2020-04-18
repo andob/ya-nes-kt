@@ -6,6 +6,8 @@ class Int8
     private var value : Byte
 )
 {
+    companion object { val Zero = Int8(0x00) }
+
     //comparison operators: < <= == > >= !=
     operator fun compareTo(another : Int8) = value.compareTo(another.value)
     operator fun compareTo(another : Byte) = value.compareTo(another)
@@ -42,3 +44,6 @@ class Int8
         "Int8: DEC: $value, "+
         "HEX: ${String.format("%02x", value)}"
 }
+
+fun Byte.toInt8() = Int8(this)
+fun Int.toInt8() = Int8(toByte())

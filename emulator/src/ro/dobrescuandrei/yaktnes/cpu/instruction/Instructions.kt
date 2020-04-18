@@ -1,8 +1,10 @@
 package ro.dobrescuandrei.yaktnes.cpu.instruction
 
 import ro.dobrescuandrei.yaktnes.NES
+import ro.dobrescuandrei.yaktnes.cpu.CPU
 import ro.dobrescuandrei.yaktnes.cpu.datatype.Int8
 import ro.dobrescuandrei.yaktnes.cpu.datatype.Pointer
+import ro.dobrescuandrei.yaktnes.cpu.datatype.toInt8
 import kotlin.experimental.inv
 
 //REFERENCE: http://www.6502.org/tutorials/6502opcodes.html
@@ -34,7 +36,7 @@ internal fun adc(value : Int8)
             .and(NES.CPU.A.toInt().xor(sum))
             .and(0x80)>0
 
-    NES.CPU.A = Int8(sum.and(0xff).toByte())
+    NES.CPU.A = sum.and(0xff).toInt8()
 }
 
 //AND = bitwise AND with accumulator
@@ -45,7 +47,7 @@ internal fun and(value : Int8)
     NES.CPU.status.N = result<0
     NES.CPU.status.Z = result==0
 
-    NES.CPU.A = Int8(result.toByte())
+    NES.CPU.A = result.toInt8()
 }
 
 //ASL = Arithmetic Shift Left
@@ -53,7 +55,7 @@ internal fun asl(pointer : Pointer)
 {
     val inputValue = NES.CPU_BUS[pointer]
     val shiftedValue = inputValue.toInt().and(0xff).shl(1)
-    val outputValue = Int8(shiftedValue.and(0xff).toByte())
+    val outputValue = shiftedValue.and(0xff).toInt8()
     NES.CPU_BUS[pointer] = outputValue
 
     NES.CPU.status.N = outputValue<0
@@ -65,21 +67,21 @@ internal fun asl(pointer : Pointer)
 internal fun bcc(delta : ProgramCounterDelta)
 {
     if (!NES.CPU.status.C)
-        NES.CPU.programCounter+=delta.toInt()
+        NES.CPU.programCounter+=delta
 }
 
 //BCS = Branch on Carry Set
 internal fun bcs(delta : ProgramCounterDelta)
 {
     if (NES.CPU.status.C)
-        NES.CPU.programCounter+=delta.toInt()
+        NES.CPU.programCounter+=delta
 }
 
 //BEQ = Branch on EQual
 internal fun beq(delta : ProgramCounterDelta)
 {
     if (NES.CPU.status.Z)
-        NES.CPU.programCounter+=delta.toInt()
+        NES.CPU.programCounter+=delta
 }
 
 //BIT = test BITs
@@ -92,21 +94,21 @@ internal fun bit(pointer : Pointer)
 internal fun bmi(delta : ProgramCounterDelta)
 {
     if (NES.CPU.status.N)
-        NES.CPU.programCounter+=delta.toInt()
+        NES.CPU.programCounter+=delta
 }
 
 //BNE = Branch on Not Equal
 internal fun bne(delta : ProgramCounterDelta)
 {
     if (!NES.CPU.status.Z)
-        NES.CPU.programCounter+=delta.toInt()
+        NES.CPU.programCounter+=delta
 }
 
 //BPL = Branch on PLus
 internal fun bpl(delta : ProgramCounterDelta)
 {
     if (!NES.CPU.status.N)
-        NES.CPU.programCounter+=delta.toInt()
+        NES.CPU.programCounter+=delta
 }
 
 //BRK = BReaK
@@ -119,14 +121,14 @@ internal fun brk()
 internal fun bvc(delta : ProgramCounterDelta)
 {
     if (!NES.CPU.status.V)
-        NES.CPU.programCounter+=delta.toInt()
+        NES.CPU.programCounter+=delta
 }
 
 //BVS = Branch on oVerflow Set
 internal fun bvs(delta : ProgramCounterDelta)
 {
     if (NES.CPU.status.V)
-        NES.CPU.programCounter+=delta.toInt()
+        NES.CPU.programCounter+=delta
 }
 
 //CLC = CLear Carry
@@ -185,10 +187,10 @@ internal fun dec(pointer : Pointer)
 }
 
 //DEX = DEcrement X
-internal fun dex() = ldx(NES.CPU.X-Int8(1))
+internal fun dex() = ldx(NES.CPU.X-1.toInt8())
 
 //DEY = DEcrement Y
-internal fun dey() = ldy(NES.CPU.Y-Int8(1))
+internal fun dey() = ldy(NES.CPU.Y-1.toInt8())
 
 //EOR = bitwise XOR
 internal fun eor(value : Int8)
@@ -198,7 +200,7 @@ internal fun eor(value : Int8)
     NES.CPU.status.N = result<0
     NES.CPU.status.Z = result==0
 
-    NES.CPU.A = Int8(result.toByte())
+    NES.CPU.A = result.toInt8()
 }
 
 //INC = INCrement memory
@@ -211,10 +213,10 @@ internal fun inc(pointer : Pointer)
 }
 
 //INX = INcrement X
-internal fun inx() = ldx(NES.CPU.X+Int8(1))
+internal fun inx() = ldx(NES.CPU.X+1.toInt8())
 
 //INY = INcrement Y
-internal fun iny() = ldy(NES.CPU.Y+Int8(1))
+internal fun iny() = ldy(NES.CPU.Y+1.toInt8())
 
 //JMP = JuMP
 internal fun jmp(pointer : Pointer)
@@ -223,9 +225,13 @@ internal fun jmp(pointer : Pointer)
 }
 
 //JSR = Jump to SubRoutine
-internal fun jsr(pointer : Pointer)
+@ExperimentalUnsignedTypes
+internal fun jsr(pointer : Pointer.ToMachineCode)
 {
-    TODO()
+    NES.CPU.stack.push(NES.CPU.programCounter.getLeastSignificantByte().toInt8())
+    NES.CPU.stack.push(NES.CPU.programCounter.getMostSignificantByte().toInt8())
+
+    NES.CPU.programCounter = pointer
 }
 
 //LDA = LoaD Accumulator
@@ -260,7 +266,7 @@ internal fun lsr(pointer : Pointer)
 {
     val inputValue = NES.CPU_BUS[pointer]
     val shiftedValue = inputValue.toInt().and(0xff).shr(1)
-    val outputValue = Int8(shiftedValue.and(0xff).toByte())
+    val outputValue = shiftedValue.and(0xff).toInt8()
     NES.CPU_BUS[pointer] = outputValue
 
     NES.CPU.status.N = outputValue<0
@@ -279,31 +285,40 @@ internal fun ora(value : Int8)
     NES.CPU.status.N = result<0
     NES.CPU.status.Z = result==0
 
-    NES.CPU.A = Int8(result.toByte())
+    NES.CPU.A = result.toInt8()
 }
 
 //PHA = PusH Accumulator
 internal fun pha()
 {
-    TODO()
+    NES.CPU.stack.push(NES.CPU.A)
 }
 
 //PHP = PusH Processor status
 internal fun php()
 {
-    TODO()
+    NES.CPU.stack.push(NES.CPU.status.toByte().toInt8())
 }
 
 //PLA = PuLl Accumulator
 internal fun pla()
 {
-    TODO()
+    if (NES.CPU.stack.isNotEmpty())
+        NES.CPU.A = NES.CPU.stack.pop()
+    else NES.CPU.A = Int8.Zero
+
+    NES.CPU.status.Z = NES.CPU.A.isNil()
+    NES.CPU.status.N = NES.CPU.A<0
 }
 
 //PLP = PuLl Processor status
 internal fun plp()
 {
-    TODO()
+    if (NES.CPU.stack.isNotEmpty())
+    {
+        val newCpuStatusAsByte = NES.CPU.stack.pop().toByte()
+        NES.CPU.status = CPU.Status.fromByte(newCpuStatusAsByte)
+    }
 }
 
 //ROL = ROtate Left
@@ -314,7 +329,7 @@ internal fun rol(pointer : Pointer)
 
     //rotate shifted byte
     if (NES.CPU.status.C)
-        NES.CPU_BUS[pointer] = Int8(NES.CPU_BUS[pointer].toInt().or(0x01).toByte())
+        NES.CPU_BUS[pointer] = NES.CPU_BUS[pointer].toInt().or(0x01).toInt8()
 }
 
 //ROR = ROtate Right
@@ -325,7 +340,7 @@ internal fun ror(pointer : Pointer)
 
     //rotate shifted byte
     if (NES.CPU.status.C)
-        NES.CPU_BUS[pointer] = Int8(NES.CPU_BUS[pointer].toInt().or(0x80).toByte())
+        NES.CPU_BUS[pointer] = NES.CPU_BUS[pointer].toInt().or(0x80).toInt8()
 }
 
 //RTI = ReTurn from Interrupt
@@ -337,14 +352,19 @@ internal fun rti()
 //RTS = ReTurn from Subroutine
 internal fun rts()
 {
-    TODO()
+    if (NES.CPU.stack.isNotEmpty())
+    {
+        val mostSignificantByte = NES.CPU.stack.pop().toByte()
+        val leastSignificantByte = NES.CPU.stack.pop().toByte()
+        NES.CPU.programCounter = Pointer.ToMachineCode(leastSignificantByte, mostSignificantByte)
+    }
 }
 
 //SBC = SuBstract with Carry
 internal fun sbc(value : Int8)
 {
     //Just bitwise invert the number: x-y = x+(-y)
-    adc(Int8(value.toByte().inv()))
+    adc(value.toByte().inv().toInt8())
 }
 
 //SEC = SEt Carry
@@ -390,7 +410,12 @@ internal fun tay() = ldy(NES.CPU.A)
 //TSX = Transfer Stack pointer to X
 internal fun tsx()
 {
-    TODO()
+    val result = NES.CPU.stack.stackPointer
+
+    NES.CPU.status.N = result<0
+    NES.CPU.status.Z = result.isNil()
+
+    NES.CPU.X = result
 }
 
 //TXA = Transfer X to A
@@ -399,7 +424,7 @@ internal fun txa() = lda(NES.CPU.X)
 //TXS = Transfer X to Stack pointer
 internal fun txs()
 {
-    TODO()
+    NES.CPU.stack.seekTo(NES.CPU.X)
 }
 
 //TYA = Transfer Y to A
