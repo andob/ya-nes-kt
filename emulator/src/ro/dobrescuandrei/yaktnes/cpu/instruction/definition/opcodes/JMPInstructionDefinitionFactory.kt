@@ -7,13 +7,13 @@ import ro.dobrescuandrei.yaktnes.cpu.instruction.definition.InstructionGroupDefi
 import ro.dobrescuandrei.yaktnes.cpu.instruction.definition.InstructionGroupDefinitionFactory
 import ro.dobrescuandrei.yaktnes.cpu.instruction.jmp
 
-object JMPInstructionDefinitionFactory : InstructionGroupDefinitionFactory<Pointer>
+object JMPInstructionDefinitionFactory : InstructionGroupDefinitionFactory<Pointer.ToMachineCode>
 {
-    override fun newInstance() : InstructionGroupDefinition<Pointer>
+    override fun newInstance() : InstructionGroupDefinition<Pointer.ToMachineCode>
     {
         return InstructionGroupDefinition(
             name = "JMP",
-            argumentType = Pointer::class.java,
+            argumentType = Pointer.ToMachineCode::class.java,
             execution = ::jmp,
             definitions = listOf(
 

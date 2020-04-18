@@ -16,6 +16,8 @@ import kotlin.experimental.inv
 //   and variables from NES.CPU.*, NES.CPU_BUS.*
 //2. Do not declare static variables in this file
 
+//TODO INTERRUPTS - http://wiki.nesdev.com/w/index.php/CPU_interrupts
+
 typealias ProgramCounterDelta = Int8
 
 //ADC = ADd with Carry
@@ -87,7 +89,10 @@ internal fun beq(delta : ProgramCounterDelta)
 //BIT = test BITs
 internal fun bit(pointer : Pointer)
 {
-    TODO()
+    val value = NES.CPU_BUS[pointer].toInt()
+    NES.CPU.status.Z = NES.CPU.A.toInt().and(value)==0
+    NES.CPU.status.V = value.shr(6).and(1)>0
+    NES.CPU.status.N = value<0
 }
 
 //BMI = Branch on MInus
@@ -114,7 +119,7 @@ internal fun bpl(delta : ProgramCounterDelta)
 //BRK = BReaK
 internal fun brk()
 {
-    TODO()
+    TODO("INTERRUPTS")
 }
 
 //BVC = Branch on oVerflow Clear
@@ -144,7 +149,7 @@ internal fun cld() {}
 //CLI = CLear Interrupt
 internal fun cli()
 {
-    TODO()
+    TODO("INTERRUPTS")
 }
 
 //CLV = CLear oVerflow
@@ -219,9 +224,9 @@ internal fun inx() = ldx(NES.CPU.X+1.toInt8())
 internal fun iny() = ldy(NES.CPU.Y+1.toInt8())
 
 //JMP = JuMP
-internal fun jmp(pointer : Pointer)
+internal fun jmp(pointer : Pointer.ToMachineCode)
 {
-    TODO()
+    NES.CPU.programCounter = pointer
 }
 
 //JSR = Jump to SubRoutine
@@ -346,7 +351,7 @@ internal fun ror(pointer : Pointer)
 //RTI = ReTurn from Interrupt
 internal fun rti()
 {
-    TODO()
+    TODO("INTERRUPTS")
 }
 
 //RTS = ReTurn from Subroutine
@@ -380,7 +385,7 @@ internal fun sed() {}
 //SEI = SEt Interrupt
 internal fun sei()
 {
-    TODO()
+    TODO("INTERRUPTS")
 }
 
 //STA = STore Accumulator

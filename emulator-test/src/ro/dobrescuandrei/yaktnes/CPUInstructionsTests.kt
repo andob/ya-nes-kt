@@ -1,7 +1,6 @@
 package ro.dobrescuandrei.yaktnes
 
 import org.junit.Assert.*
-import org.junit.Before
 import org.junit.Test
 import ro.dobrescuandrei.yaktnes.cpu.CPU
 import ro.dobrescuandrei.yaktnes.cpu.datatype.*
@@ -11,7 +10,7 @@ import kotlin.random.Random
 
 class CPUInstructionsTests
 {
-    val randomizer = Random(System.currentTimeMillis())
+    private val randomizer = Random(System.currentTimeMillis())
 
     @Test
     fun testLoadAndSaveAccumulator() = withCPUTestEnvironment {
@@ -241,8 +240,6 @@ class CPUInstructionsTests
         exec("LDA", AddressingMode.IndirectY, 0x99.toByte())
         assertEquals(NES.CPU_BUS[0x00EE.toPointer()], 0x12.toInt8())
         assertEquals(NES.CPU.A, 0x12.toInt8())
-
-        TODO("test JMP with INDIRECT addressing")
     }
 
     @Test
@@ -454,6 +451,13 @@ class CPUInstructionsTests
         exec("ROL", AddressingMode.Accumulator)
         assertEquals(NES.CPU.A, 0xAD.toInt8())
         assertEquals(NES.CPU.status.C, true)
+
+        println("Test fast bitwise AND: BIT")
+        exec("LDA", AddressingMode.Immediate, 0xFF.toByte())
+        exec("STA", AddressingMode.ZeroPage, 0x99.toByte())
+        exec("LDA", AddressingMode.Immediate, 0x00.toByte())
+        exec("BIT", AddressingMode.ZeroPage, 0x99.toByte())
+        assertEquals(NES.CPU.status.Z, true)
     }
 
     @Test
@@ -634,6 +638,40 @@ class CPUInstructionsTests
             assertEquals(NES.CPU_BUS[0x51.toPointer()], 0x30.toInt8())
             assertEquals(NES.CPU_BUS[0x52.toPointer()], 0x10.toInt8())
             assertEquals(NES.CPU_BUS[0x53.toPointer()], 0x00.toInt8())
+        }
+    }
+
+    @Test
+    fun testJumps()
+    {
+        println("Test jump at absolute address")
+        withCPUTestEnvironment {
+            val machineCode=assemble {
+                asm("LDX", AddressingMode.Immediate, 0x11.toByte())
+                asm("JMP", AddressingMode.Absolute, 0x06.toByte(), 0x06.toByte())
+                asm("INX", AddressingMode.Implicit)
+                asm("INX", AddressingMode.Implicit)
+            }
+
+            NES.CPU.execute(machineCode)
+            assertEquals(NES.CPU.X, 0x12.toInt8())
+        }
+
+        println("Test jump at indirect address")
+        withCPUTestEnvironment {
+            val machineCode=assemble {
+                asm("LDA", AddressingMode.Immediate, 0x06.toByte())
+                asm("STA", AddressingMode.ZeroPage, 0x10.toByte())
+                asm("LDA", AddressingMode.Immediate, 0x0E.toByte())
+                asm("STA", AddressingMode.ZeroPage, 0x11.toByte())
+                asm("LDX", AddressingMode.Immediate, 0x11.toByte())
+                asm("JMP", AddressingMode.Indirect, 0x00.toByte(), 0x10.toByte())
+                asm("INX", AddressingMode.Implicit)
+                asm("INX", AddressingMode.Implicit)
+            }
+
+            NES.CPU.execute(machineCode)
+            assertEquals(NES.CPU.X, 0x12.toInt8())
         }
     }
 }
