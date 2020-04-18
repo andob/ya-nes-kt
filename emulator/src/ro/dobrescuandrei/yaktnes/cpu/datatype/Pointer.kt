@@ -16,9 +16,9 @@ open class Pointer
     override fun hashCode() = address.toInt()
 
     //arithmetic operators: + - %
-    operator fun plus(another : Int8) = Pointer((address+another.toUInt()).toUShort())
+    operator fun plus(another : Int8) = Pointer((address+another.toUByte()).toUShort())
     operator fun plus(another : Int) = Pointer((address+another.toUInt()).toUShort())
-    operator fun minus(another : Int8) = Pointer((address-another.toUInt()).toUShort())
+    operator fun minus(another : Int8) = Pointer((address-another.toUByte()).toUShort())
     operator fun rem(another : Short) = Pointer(address.rem(another.toUInt()).toUShort())
     operator fun rem(another : Int) = Pointer(address.rem(another.toUInt()).toUShort())
 
@@ -32,7 +32,7 @@ open class Pointer
 
     override fun toString() =
         "Pointer: DEC: $address, "+
-        "HEX: ${String.format("%02x", address)}"
+        "HEX: ${String.format("%04x", address.toShort())}"
 
     //special type of Pointer - the operation should be applied on CPU accumulator
     class ToAccumulator : Pointer(0xffff.toUShort())

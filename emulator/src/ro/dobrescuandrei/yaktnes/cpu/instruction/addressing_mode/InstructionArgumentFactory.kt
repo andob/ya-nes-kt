@@ -98,7 +98,7 @@ object InstructionArgumentFactory
             AddressingMode.Indirect ->
             {
                 //the argument is a pointer to pointer
-                val pointer=machineCode.nextPointer()
+                val pointer=machineCode.nextZeroPagePointer()
                 val leastSignificantByte=NES.CPU_BUS[pointer.rem(0xFF+1)].toByte()
                 val mostSignificantByte=NES.CPU_BUS[(pointer+1).rem(0xFF+1)].toByte()
                 return Pointer(leastSignificantByte, mostSignificantByte)
@@ -107,7 +107,7 @@ object InstructionArgumentFactory
             AddressingMode.IndirectX ->
             {
                 //the argument is a pointer to pointer
-                val pointer=machineCode.nextPointer()
+                val pointer=machineCode.nextZeroPagePointer()
                 val leastSignificantByte=NES.CPU_BUS[(pointer+NES.CPU.X).rem(0xFF+1)].toByte()
                 val mostSignificantByte=NES.CPU_BUS[(pointer+NES.CPU.X+1).rem(0xFF+1)].toByte()
                 return Pointer(leastSignificantByte, mostSignificantByte)
@@ -116,7 +116,7 @@ object InstructionArgumentFactory
             AddressingMode.IndirectY ->
             {
                 //the argument is a pointer to pointer
-                val pointer=machineCode.nextPointer()
+                val pointer=machineCode.nextZeroPagePointer()
                 val leastSignificantByte=NES.CPU_BUS[pointer.rem(0xFF+1)].toByte()
                 val mostSignificantByte=NES.CPU_BUS[(pointer+1).rem(0xFF+1)].toByte()
                 val childPointer=Pointer(leastSignificantByte, mostSignificantByte)

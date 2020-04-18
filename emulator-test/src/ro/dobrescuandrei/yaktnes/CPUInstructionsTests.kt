@@ -6,70 +6,15 @@ import org.junit.Test
 import ro.dobrescuandrei.yaktnes.cpu.datatype.Int8
 import ro.dobrescuandrei.yaktnes.cpu.datatype.Pointer
 import ro.dobrescuandrei.yaktnes.cpu.instruction.addressing_mode.AddressingMode
-import ro.dobrescuandrei.yaktnes.cpu.instruction.definition.InstructionDefinitions
-import ro.dobrescuandrei.yaktnes.cpu.MachineCode
-import ro.dobrescuandrei.yaktnes.cpu.instruction.definition.InstructionDefinition
+import ro.dobrescuandrei.yaktnes.utils.withCPUTestEnvironment
 
 class CPUInstructionsTests
 {
-    private var machineCodeBytes = byteArrayOf()
-    private val loopedInstructionTesters = mutableListOf<LoopedInstructionTester>()
-
     @Before
     fun before() = NES.reset()
 
-    private fun exec(instructionName : String, addressingMode : AddressingMode, vararg arguments : Byte) : InstructionDefinition<Any>
-    {
-        val definition=InstructionDefinitions[instructionName, addressingMode]!!
-        machineCodeBytes+=byteArrayOf(definition.id)
-        machineCodeBytes+=arguments
-        val machineCode=MachineCode(machineCodeBytes)
-        NES.CPU.execute(machineCode)
-
-        //on branch, jump etc, there are instructions to run in the loop
-        while (machineCode.hasNextByte())
-            NES.CPU.execute(machineCode)
-
-        return definition
-    }
-
-    private class LoopedInstructionTester
-    {
-        val instructionDefinition : InstructionDefinition<Any>
-        val targetNumberOfTimesInstructionShouldBeExecuted : Int
-        var numberOfTimesInstructionWasExecuted = 1
-
-        constructor(instructionDefinition : InstructionDefinition<Any>, targetTimes : Int)
-        {
-            this.instructionDefinition=instructionDefinition
-            this.targetNumberOfTimesInstructionShouldBeExecuted=targetTimes
-
-            val originalExecution=instructionDefinition.groupDefinition.execution
-
-            instructionDefinition.groupDefinition.execution={ argument ->
-                originalExecution.invoke(argument)
-                numberOfTimesInstructionWasExecuted++
-            }
-        }
-
-        fun assert() = assertEquals(
-            numberOfTimesInstructionWasExecuted,
-            targetNumberOfTimesInstructionShouldBeExecuted)
-    }
-
-    private fun InstructionDefinition<Any>.shouldBeExecutedTwice() =
-        loopedInstructionTesters.add(LoopedInstructionTester(instructionDefinition = this, targetTimes = 2))
-
-    private fun InstructionDefinition<Any>.assertLoopExecution()
-    {
-        for (tester in loopedInstructionTesters)
-            tester.assert()
-        loopedInstructionTesters.clear()
-    }
-
     @Test
-    fun testLoadAndSaveAccumulator()
-    {
+    fun testLoadAndSaveAccumulator() = withCPUTestEnvironment {
         println("Loading constant 0x44 (68) into accumulator")
         exec("LDA", AddressingMode.Immediate, 0x44)
         assertEquals(NES.CPU.A, Int8(0x44))
@@ -133,8 +78,7 @@ class CPUInstructionsTests
     }
 
     @Test
-    fun testLoadAndSaveXRegister()
-    {
+    fun testLoadAndSaveXRegister() = withCPUTestEnvironment {
         println("Loading constant value 0x32 into X register")
         exec("LDX", AddressingMode.Immediate, 0x32)
         assertEquals(NES.CPU.X, Int8(0x32))
@@ -172,8 +116,7 @@ class CPUInstructionsTests
     }
 
     @Test
-    fun testLoadAndSaveYRegister()
-    {
+    fun testLoadAndSaveYRegister() = withCPUTestEnvironment {
         println("Loading constant value 0x32 into Y register")
         exec("LDY", AddressingMode.Immediate, 0x32)
         assertEquals(NES.CPU.Y, Int8(0x32))
@@ -211,37 +154,99 @@ class CPUInstructionsTests
     }
 
     @Test
-    fun testLoadAndSaveRegisteresWithIndexedAddressing()
-    {
-        TODO("lda zero page x")
-        TODO("todo sta zero page x")
+    fun testIndexedAddressing() = withCPUTestEnvironment {
+        println("test zero page X indexing with LDA/STA")
+        exec("LDA", AddressingMode.Immediate, 0x12.toByte())
+        exec("LDX", AddressingMode.Immediate, 0xEE.toByte())
+        exec("STA", AddressingMode.ZeroPageX, 0x41.toByte())
+        exec("LDA", AddressingMode.Immediate, 0x00.toByte())
+        exec("LDA", AddressingMode.ZeroPageX, 0x41.toByte())
+        assertEquals(NES.CPU_BUS[Pointer(0x002F.toUShort())], Int8(0x12))
+        assertEquals(NES.CPU.A, Int8(0x12))
 
-        TODO("todo ldy zero page x")
-        TODO("todo sty zero page x")
+        println("test zero page X indexing with LDY/STY")
+        exec("LDY", AddressingMode.Immediate, 0x12.toByte())
+        exec("LDX", AddressingMode.Immediate, 0xEE.toByte())
+        exec("STY", AddressingMode.ZeroPageX, 0x41.toByte())
+        exec("LDY", AddressingMode.Immediate, 0x00.toByte())
+        exec("LDY", AddressingMode.ZeroPageX, 0x41.toByte())
+        assertEquals(NES.CPU_BUS[Pointer(0x002F.toUShort())], Int8(0x12))
+        assertEquals(NES.CPU.Y, Int8(0x12))
 
-        TODO("todo ldx zero page y")
-        TODO("todo stx zero page y")
+        println("test zero page Y indexing with LDX/STX")
+        exec("LDX", AddressingMode.Immediate, 0x12.toByte())
+        exec("LDY", AddressingMode.Immediate, 0xEE.toByte())
+        exec("STX", AddressingMode.ZeroPageY, 0x41.toByte())
+        exec("LDX", AddressingMode.Immediate, 0x00.toByte())
+        exec("LDX", AddressingMode.ZeroPageY, 0x41.toByte())
+        assertEquals(NES.CPU_BUS[Pointer(0x002F.toUShort())], Int8(0x12))
+        assertEquals(NES.CPU.X, Int8(0x12))
 
-        TODO("todo lda absolute x")
-        TODO("todo sta absolute x")
+        println("test absolute X indexing with LDA/STA")
+        exec("LDA", AddressingMode.Immediate, 0x12.toByte())
+        exec("LDX", AddressingMode.Immediate, 0xEE.toByte())
+        exec("STA", AddressingMode.AbsoluteX, 0x10.toByte(), 0x00.toByte())
+        exec("LDA", AddressingMode.Immediate, 0x41.toByte())
+        exec("LDA", AddressingMode.AbsoluteX, 0x10.toByte(), 0x00.toByte())
+        assertEquals(NES.CPU_BUS[Pointer(0x10EE.toUShort())], Int8(0x12))
+        assertEquals(NES.CPU.A, Int8(0x12))
 
-        TODO("todo lda absolute y")
-        TODO("todo sta absolute y")
+        println("test absolute Y indexing with LDA/STA")
+        exec("LDA", AddressingMode.Immediate, 0x12.toByte())
+        exec("LDY", AddressingMode.Immediate, 0xEE.toByte())
+        exec("STA", AddressingMode.AbsoluteY, 0x10.toByte(), 0x00.toByte())
+        exec("LDA", AddressingMode.Immediate, 0x41.toByte())
+        exec("LDA", AddressingMode.AbsoluteY, 0x10.toByte(), 0x00.toByte())
+        assertEquals(NES.CPU_BUS[Pointer(0x10EE.toUShort())], Int8(0x12))
+        assertEquals(NES.CPU.A, Int8(0x12))
 
-        TODO("todo lda indirect x")
-        TODO("todo sta indirect x")
+        println("test absolute Y indexing with LDX")
+        exec("LDX", AddressingMode.Immediate, 0x12.toByte())
+        exec("LDY", AddressingMode.Immediate, 0xEE.toByte())
+        exec("STX", AddressingMode.Absolute, 0x10.toByte(), 0xEE.toByte())
+        exec("LDX", AddressingMode.Immediate, 0x41.toByte())
+        exec("LDX", AddressingMode.AbsoluteY, 0x10.toByte(), 0x00.toByte())
+        assertEquals(NES.CPU_BUS[Pointer(0x10EE.toUShort())], Int8(0x12))
+        assertEquals(NES.CPU.X, Int8(0x12))
 
-        TODO("todo lda indirect y")
-        TODO("todo sta indirect y")
+        println("test absolute X indexing with LDY/STY")
+        exec("LDY", AddressingMode.Immediate, 0x12.toByte())
+        exec("LDX", AddressingMode.Immediate, 0xEE.toByte())
+        exec("STY", AddressingMode.Absolute, 0x10.toByte(), 0xEE.toByte())
+        exec("LDY", AddressingMode.Immediate, 0x41.toByte())
+        exec("LDY", AddressingMode.AbsoluteX, 0x10.toByte(), 0x00.toByte())
+        assertEquals(NES.CPU_BUS[Pointer(0x10EE.toUShort())], Int8(0x12))
+        assertEquals(NES.CPU.Y, Int8(0x12))
 
-        TODO("todo ldx absolute y")
+        println("test indirect X indexing with LDA/STA")
+        exec("LDA", AddressingMode.Immediate, 0x12.toByte())
+        exec("LDX", AddressingMode.Immediate, 0x00.toByte())
+        exec("STX", AddressingMode.ZeroPage, 0x87.toByte())
+        exec("LDX", AddressingMode.Immediate, 0xEE.toByte())
+        exec("STX", AddressingMode.ZeroPage, 0x88.toByte())
+        exec("STA", AddressingMode.IndirectX, 0x99.toByte())
+        exec("LDA", AddressingMode.Immediate, 0x41.toByte())
+        exec("LDA", AddressingMode.IndirectX, 0x99.toByte())
+        assertEquals(NES.CPU_BUS[Pointer(0x00EE.toUShort())], Int8(0x12))
+        assertEquals(NES.CPU.A, Int8(0x12))
 
-        TODO("todo ldy absolute x")
+        println("test indirect Y indexing with LDA/STA")
+        exec("LDA", AddressingMode.Immediate, 0x12.toByte())
+        exec("LDY", AddressingMode.Immediate, 0x00.toByte())
+        exec("STY", AddressingMode.ZeroPage, 0x87.toByte())
+        exec("LDY", AddressingMode.Immediate, 0xEE.toByte())
+        exec("STY", AddressingMode.ZeroPage, 0x88.toByte())
+        exec("STA", AddressingMode.IndirectY, 0x99.toByte())
+        exec("LDA", AddressingMode.Immediate, 0x41.toByte())
+        exec("LDA", AddressingMode.IndirectY, 0x99.toByte())
+        assertEquals(NES.CPU_BUS[Pointer(0x00EE.toUShort())], Int8(0x12))
+        assertEquals(NES.CPU.A, Int8(0x12))
+
+        TODO("test JMP with INDIRECT addressing")
     }
 
     @Test
-    fun testRegisterOperationsInstructions()
-    {
+    fun testRegisterOperationsInstructions() = withCPUTestEnvironment {
         println("load 0x12 into A, 0x34 into X, transfer A to X")
         exec("LDA", AddressingMode.Immediate, 0x12)
         exec("LDX", AddressingMode.Immediate, 0x34)
@@ -302,8 +307,7 @@ class CPUInstructionsTests
     }
 
     @Test
-    fun testIncrementAndDecrementMemoryInstructions()
-    {
+    fun testIncrementAndDecrementMemoryInstructions() = withCPUTestEnvironment {
         println("load 0x11 into 0x99, increment memory, decrement memory")
         exec("LDA", AddressingMode.Immediate, 0x11)
         exec("STA", AddressingMode.ZeroPage, 0x99.toByte())
@@ -322,8 +326,7 @@ class CPUInstructionsTests
     }
 
     @Test
-    fun testAddAndSubstractWithCarryInstructions()
-    {
+    fun testAddAndSubstractWithCarryInstructions() = withCPUTestEnvironment {
         println("Add without carry: 0x05 + 0x05 = 0x0A")
         exec("LDA", AddressingMode.Immediate, 0x05)
         exec("ADC", AddressingMode.Immediate, 0x05)
@@ -372,8 +375,7 @@ class CPUInstructionsTests
     }
 
     @Test
-    fun testBitwiseOperations()
-    {
+    fun testBitwiseOperations() = withCPUTestEnvironment {
         println("Bitwise AND: 0x05 AND 0x41 = 0x01")
         exec("LDA", AddressingMode.Immediate, 0x05)
         exec("AND", AddressingMode.Immediate, 0x41)
@@ -455,8 +457,7 @@ class CPUInstructionsTests
     }
 
     @Test
-    fun testBranches()
-    {
+    fun testBranches() = withCPUTestEnvironment {
         println("Branch on equal")
         exec("LDA", AddressingMode.Immediate, 0xB4.toByte())
         exec("STA", AddressingMode.ZeroPage, 0x99.toByte())
@@ -489,7 +490,16 @@ class CPUInstructionsTests
         assertEquals(NES.CPU.A, Int8(0x00))
         assertEquals(NES.CPU.status.C, true)
 
-        TODO("test Branch on Carry Set")
+        println("Branch on carry set")
+        exec("CLC", AddressingMode.Implicit)
+        exec("LDA", AddressingMode.Immediate, 0xFF.toByte())
+        exec("STA", AddressingMode.ZeroPage, 0x99.toByte())
+        exec("LDA", AddressingMode.ZeroPage, 0x99.toByte())
+        exec("ADC", AddressingMode.Immediate, 0x01.toByte()).shouldBeExecutedTwice()
+        exec("STA", AddressingMode.ZeroPage, 0x99.toByte()).shouldBeExecutedTwice()
+        exec("BCS", AddressingMode.Relative, 0xFA.toByte()).assertLoopExecution()
+        assertEquals(NES.CPU.A, Int8(0x02))
+        assertEquals(NES.CPU.status.C, false)
 
         println("Branch on minus")
         exec("LDY", AddressingMode.Immediate, 0xAA.toByte())
@@ -498,14 +508,37 @@ class CPUInstructionsTests
         exec("DEC", AddressingMode.ZeroPage, 0x99.toByte()).shouldBeExecutedTwice()
         exec("CPY", AddressingMode.ZeroPage, 0x99.toByte()).shouldBeExecutedTwice()
         exec("BMI", AddressingMode.Relative, 0xFA.toByte()).assertLoopExecution()
-        exec("LDY", AddressingMode.Immediate, 0xFF.toByte()).assertLoopExecution()
+        exec("LDY", AddressingMode.Immediate, 0xFF.toByte())
         assertEquals(NES.CPU.A, Int8(0xAC.toByte()))
         assertEquals(NES.CPU.Y, Int8(0xFF.toByte()))
         assertEquals(NES.CPU.status.C, true)
 
-        TODO("test Branch on PLus")
+        println("Branch on plus")
+        exec("CLC", AddressingMode.Implicit)
+        exec("LDY", AddressingMode.Immediate, 0xAC.toByte())
+        exec("LDA", AddressingMode.Immediate, 0xAA.toByte())
+        exec("STA", AddressingMode.ZeroPage, 0x99.toByte())
+        exec("INC", AddressingMode.ZeroPage, 0x99.toByte()).shouldBeExecutedThreeTimes()
+        exec("CPY", AddressingMode.ZeroPage, 0x99.toByte()).shouldBeExecutedThreeTimes()
+        exec("BPL", AddressingMode.Relative, 0xFA.toByte()).assertLoopExecution()
+        exec("LDA", AddressingMode.ZeroPage, 0x99.toByte())
+        assertEquals(NES.CPU.A, Int8(0xAD.toByte()))
+        assertEquals(NES.CPU.Y, Int8(0xAC.toByte()))
+        assertEquals(NES.CPU.status.C, false)
 
-        TODO("test Branch on oVerflow Clear")
-        TODO("test Branch on oVerflow Set")
+        println("Branch on overflow clear")
+        exec("LDA", AddressingMode.Immediate, 0x7E.toByte())
+        exec("ADC", AddressingMode.Immediate, 0x01.toByte()).shouldBeExecutedTwice()
+        exec("BVC", AddressingMode.Relative, 0xFC.toByte()).assertLoopExecution()
+        assertEquals(NES.CPU.A, Int8(0x80.toByte()))
+        assertEquals(NES.CPU.status.V, true)
+
+        println("Branch on overflow set")
+        exec("CLV", AddressingMode.Implicit)
+        exec("LDA", AddressingMode.Immediate, 0x7F.toByte())
+        exec("ADC", AddressingMode.Immediate, 0x01.toByte()).shouldBeExecutedTwice()
+        exec("BVS", AddressingMode.Relative, 0xFC.toByte()).assertLoopExecution()
+        assertEquals(NES.CPU.A, Int8(0x81.toByte()))
+        assertEquals(NES.CPU.status.V, false)
     }
 }
