@@ -6,6 +6,7 @@ import java.util.*
 
 class CPUStack : Stack<Int8>()
 {
+    //todo map into CPU bus
     val stackPointer get() = (0xFF-size).toInt8()
 
     @ExperimentalUnsignedTypes

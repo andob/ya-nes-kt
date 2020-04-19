@@ -9,6 +9,7 @@ import ro.dobrescuandrei.yaktnes.cpu.instruction.ProgramCounterDelta
 @OptIn(ExperimentalUnsignedTypes::class)
 class MachineCode
 (
+    //todo map into CPU bus
     val code : ByteArray
 )
 {
@@ -50,8 +51,8 @@ class MachineCode
 
     fun nextPointer() : Pointer
     {
-        val leastSignificantByte=nextByte()
         val mostSignificantByte=nextByte()
+        val leastSignificantByte=nextByte()
         return Pointer(leastSignificantByte, mostSignificantByte)
     }
 }

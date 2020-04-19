@@ -3,7 +3,7 @@ package ro.dobrescuandrei.yaktnes.cpu
 import ro.dobrescuandrei.yaktnes.NES
 import ro.dobrescuandrei.yaktnes.cpu.datatype.Int8
 import ro.dobrescuandrei.yaktnes.cpu.datatype.Pointer
-import ro.dobrescuandrei.yaktnes.cpu.datatype.toInt8
+import ro.dobrescuandrei.yaktnes.cpu.datatype.nextInt8
 import kotlin.random.Random
 
 class CPUBus
@@ -15,7 +15,7 @@ class CPUBus
     {
         val randomizer=Random(System.currentTimeMillis())
         for (index in values.indices)
-            values[index]=randomizer.nextBytes(size = 1).first().toInt8()
+            values[index]=randomizer.nextInt8()
     }
 
     private fun Pointer.toIndex() = toUInt().toInt().rem(0xFFFF)

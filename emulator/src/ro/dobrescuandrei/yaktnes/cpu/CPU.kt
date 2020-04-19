@@ -2,10 +2,8 @@ package ro.dobrescuandrei.yaktnes.cpu
 
 import ro.dobrescuandrei.yaktnes.cpu.datatype.Int8
 import ro.dobrescuandrei.yaktnes.cpu.datatype.Pointer
-import ro.dobrescuandrei.yaktnes.cpu.datatype.toInt8
 import ro.dobrescuandrei.yaktnes.cpu.instruction.definition.InstructionDefinitions
 import ro.dobrescuandrei.yaktnes.cpu.instruction.execution.InstructionExecutor
-import java.util.*
 
 class CPU
 {
@@ -16,6 +14,8 @@ class CPU
     var programCounter = Pointer.ToMachineCode.Zero
 
     val stack = CPUStack()
+
+    val clock = CPUClock()
 
     var status = Status()
 
@@ -64,6 +64,15 @@ class CPU
         {
             InstructionDefinitions[machineCode.nextByte()]?.let { definition ->
                 InstructionExecutor.executeInstruction(definition, machineCode)
+                for (i in 1..300000) {} //todo await with Clock, not with for... nor Thread.sleep
+
+//                val benchmarkResult=clock.executeAndBenchmark {
+//                    InstructionExecutor.executeInstruction(definition, machineCode)
+//                }
+//
+//                if (benchmarkResult.didExecutionTookTooLong())
+//                    System.err.println("WARNING!!! INTRUCTION TOOK TOO MUCH TIME TO RUN! ${definition.groupDefinition.name}")
+//                else clock.await(deltaTimeInNs = clock.speedInNanoseconds-benchmarkResult.deltaTimeInNs)
             }
         }
     }

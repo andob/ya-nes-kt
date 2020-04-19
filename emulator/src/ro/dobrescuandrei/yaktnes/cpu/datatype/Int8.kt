@@ -1,5 +1,7 @@
 package ro.dobrescuandrei.yaktnes.cpu.datatype
 
+import kotlin.random.Random
+
 class Int8
 (
     //8-bit signed or unsigned int
@@ -47,3 +49,5 @@ class Int8
 
 fun Byte.toInt8() = Int8(this)
 fun Int.toInt8() = Int8(toByte())
+
+fun Random.nextInt8() = nextBytes(size = 1).first().toInt8()

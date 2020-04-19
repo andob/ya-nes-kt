@@ -84,7 +84,7 @@ class CPUTestEnvironment
     {
         val definition=InstructionDefinitions[instructionName, addressingMode]!!
         machineCodeBytes+=byteArrayOf(definition.id)
-        machineCodeBytes+=arguments
+        machineCodeBytes+=arguments.reversed()
         val machineCode=MachineCode(machineCodeBytes)
         NES.CPU.execute(machineCode)
 
@@ -110,7 +110,7 @@ class CPUTestEnvironment
         {
             val definition=InstructionDefinitions[instructionName, addressingMode]!!
             machineCodeBytes+=byteArrayOf(definition.id)
-            machineCodeBytes+=arguments
+            machineCodeBytes+=arguments.reversed()
         }
     }
 }

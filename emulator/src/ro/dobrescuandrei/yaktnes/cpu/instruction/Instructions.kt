@@ -119,7 +119,7 @@ internal fun bpl(delta : ProgramCounterDelta)
 //BRK = BReaK
 internal fun brk()
 {
-    TODO("INTERRUPTS")
+    //TODO INTERRUPTS
 }
 
 //BVC = Branch on oVerflow Clear
@@ -149,7 +149,7 @@ internal fun cld() {}
 //CLI = CLear Interrupt
 internal fun cli()
 {
-    TODO("INTERRUPTS")
+    NES.CPU.status.I = false
 }
 
 //CLV = CLear oVerflow
@@ -254,7 +254,7 @@ internal fun ldx(value : Int8)
     NES.CPU.X = value
 
     NES.CPU.status.N = value<0
-    NES.CPU.status.N = value.isNil()
+    NES.CPU.status.Z = value.isNil()
 }
 
 //LDY = LoaD register Y
@@ -351,7 +351,7 @@ internal fun ror(pointer : Pointer)
 //RTI = ReTurn from Interrupt
 internal fun rti()
 {
-    TODO("INTERRUPTS")
+    //TODO INTERRUPTS
 }
 
 //RTS = ReTurn from Subroutine
@@ -382,10 +382,10 @@ internal fun sec()
 //NES doesn't support Decimal Mode
 internal fun sed() {}
 
-//SEI = SEt Interrupt
+//SEI = SEt Interrupt Disabled
 internal fun sei()
 {
-    TODO("INTERRUPTS")
+    NES.CPU.status.I = true
 }
 
 //STA = STore Accumulator
