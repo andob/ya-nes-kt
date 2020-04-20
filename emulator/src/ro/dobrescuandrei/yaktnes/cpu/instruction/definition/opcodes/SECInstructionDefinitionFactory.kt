@@ -17,7 +17,8 @@ object SECInstructionDefinitionFactory : InstructionGroupDefinitionFactory<Unit>
             definitions = listOf(
                 InstructionDefinition(
                     id = 0x38,
-                    addressingMode = AddressingMode.Implicit
+                    addressingMode = AddressingMode.Implicit,
+                    targetExecutionTime = 2
                 )
             )
         )

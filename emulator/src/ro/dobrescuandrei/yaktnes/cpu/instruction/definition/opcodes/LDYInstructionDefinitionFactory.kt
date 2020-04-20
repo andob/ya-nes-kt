@@ -19,27 +19,32 @@ object LDYInstructionDefinitionFactory : InstructionGroupDefinitionFactory<Int8>
 
                 InstructionDefinition(
                     id = 0xA0.toByte(),
-                    addressingMode = AddressingMode.Immediate
+                    addressingMode = AddressingMode.Immediate,
+                    targetExecutionTime = 2
                 ),
 
                 InstructionDefinition(
                     id = 0xA4.toByte(),
-                    addressingMode = AddressingMode.ZeroPage
+                    addressingMode = AddressingMode.ZeroPage,
+                    targetExecutionTime = 3
                 ),
 
                 InstructionDefinition(
                     id = 0xB4.toByte(),
-                    addressingMode = AddressingMode.ZeroPageX
+                    addressingMode = AddressingMode.ZeroPageX,
+                    targetExecutionTime = 4
                 ),
 
                 InstructionDefinition(
                     id = 0xAC.toByte(),
-                    addressingMode = AddressingMode.Absolute
+                    addressingMode = AddressingMode.Absolute,
+                    targetExecutionTime = 4
                 ),
 
                 InstructionDefinition(
                     id = 0xBC.toByte(),
-                    addressingMode = AddressingMode.AbsoluteX
+                    addressingMode = AddressingMode.AbsoluteX,
+                    targetExecutionTime = 4
                 )
             )
         )

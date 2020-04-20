@@ -18,7 +18,8 @@ object BEQInstructionDefinitionFactory : InstructionGroupDefinitionFactory<Progr
             definitions = listOf(
                 InstructionDefinition(
                     id = 0xF0.toByte(),
-                    addressingMode = AddressingMode.Relative
+                    addressingMode = AddressingMode.Relative,
+                    targetExecutionTime = 3
                 )
             )
         )

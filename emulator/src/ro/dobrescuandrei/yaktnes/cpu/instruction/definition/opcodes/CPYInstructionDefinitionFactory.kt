@@ -19,17 +19,20 @@ object CPYInstructionDefinitionFactory : InstructionGroupDefinitionFactory<Int8>
 
                 InstructionDefinition(
                     id = 0xC0.toByte(),
-                    addressingMode = AddressingMode.Immediate
+                    addressingMode = AddressingMode.Immediate,
+                    targetExecutionTime = 2
                 ),
 
                 InstructionDefinition(
                     id = 0xC4.toByte(),
-                    addressingMode = AddressingMode.ZeroPage
+                    addressingMode = AddressingMode.ZeroPage,
+                    targetExecutionTime = 3
                 ),
 
                 InstructionDefinition(
                     id = 0xCC.toByte(),
-                    addressingMode = AddressingMode.Absolute
+                    addressingMode = AddressingMode.Absolute,
+                    targetExecutionTime = 4
                 )
             )
         )

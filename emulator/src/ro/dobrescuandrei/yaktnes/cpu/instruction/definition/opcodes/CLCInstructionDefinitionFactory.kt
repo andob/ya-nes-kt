@@ -17,7 +17,8 @@ object CLCInstructionDefinitionFactory : InstructionGroupDefinitionFactory<Unit>
             definitions = listOf(
                 InstructionDefinition(
                     id = 0x18,
-                    addressingMode = AddressingMode.Implicit
+                    addressingMode = AddressingMode.Implicit,
+                    targetExecutionTime = 2
                 )
             )
         )

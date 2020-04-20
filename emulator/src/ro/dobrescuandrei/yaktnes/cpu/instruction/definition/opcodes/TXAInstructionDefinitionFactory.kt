@@ -17,7 +17,8 @@ object TXAInstructionDefinitionFactory : InstructionGroupDefinitionFactory<Unit>
             definitions = listOf(
                 InstructionDefinition(
                     id = 0x8A.toByte(),
-                    addressingMode = AddressingMode.Implicit
+                    addressingMode = AddressingMode.Implicit,
+                    targetExecutionTime = 2
                 )
             )
         )

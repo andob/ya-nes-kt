@@ -17,7 +17,8 @@ object TAXInstructionDefinitionFactory : InstructionGroupDefinitionFactory<Unit>
             definitions = listOf(
                 InstructionDefinition(
                     id = 0xAA.toByte(),
-                    addressingMode = AddressingMode.Implicit
+                    addressingMode = AddressingMode.Implicit,
+                    targetExecutionTime = 2
                 )
             )
         )

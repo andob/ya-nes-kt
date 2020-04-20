@@ -18,7 +18,8 @@ object BCCInstructionDefinitionFactory : InstructionGroupDefinitionFactory<Progr
             definitions = listOf(
                 InstructionDefinition(
                     id = 0x90.toByte(),
-                    addressingMode = AddressingMode.Relative
+                    addressingMode = AddressingMode.Relative,
+                    targetExecutionTime = 3
                 )
             )
         )

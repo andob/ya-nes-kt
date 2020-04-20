@@ -19,27 +19,32 @@ object ASLInstructionDefinitionFactory : InstructionGroupDefinitionFactory<Point
 
                 InstructionDefinition(
                     id = 0x0A,
-                    addressingMode = AddressingMode.Accumulator
+                    addressingMode = AddressingMode.Accumulator,
+                    targetExecutionTime = 2
                 ),
 
                 InstructionDefinition(
                     id = 0x06,
-                    addressingMode = AddressingMode.ZeroPage
+                    addressingMode = AddressingMode.ZeroPage,
+                    targetExecutionTime = 5
                 ),
 
                 InstructionDefinition(
                     id = 0x16,
-                    addressingMode = AddressingMode.ZeroPageX
+                    addressingMode = AddressingMode.ZeroPageX,
+                    targetExecutionTime = 6
                 ),
 
                 InstructionDefinition(
                     id = 0x0E,
-                    addressingMode = AddressingMode.Absolute
+                    addressingMode = AddressingMode.Absolute,
+                    targetExecutionTime = 6
                 ),
 
                 InstructionDefinition(
                     id = 0x1E,
-                    addressingMode = AddressingMode.AbsoluteX
+                    addressingMode = AddressingMode.AbsoluteX,
+                    targetExecutionTime = 7
                 )
             )
         )

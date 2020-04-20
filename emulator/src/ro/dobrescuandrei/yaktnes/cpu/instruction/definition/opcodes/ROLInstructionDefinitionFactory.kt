@@ -19,27 +19,32 @@ object ROLInstructionDefinitionFactory : InstructionGroupDefinitionFactory<Point
 
                 InstructionDefinition(
                     id = 0x2A,
-                    addressingMode = AddressingMode.Accumulator
+                    addressingMode = AddressingMode.Accumulator,
+                    targetExecutionTime = 2
                 ),
 
                 InstructionDefinition(
                     id = 0x26,
-                    addressingMode = AddressingMode.ZeroPage
+                    addressingMode = AddressingMode.ZeroPage,
+                    targetExecutionTime = 5
                 ),
 
                 InstructionDefinition(
                     id = 0x36,
-                    addressingMode = AddressingMode.ZeroPageX
+                    addressingMode = AddressingMode.ZeroPageX,
+                    targetExecutionTime = 6
                 ),
 
                 InstructionDefinition(
                     id = 0x2E,
-                    addressingMode = AddressingMode.Absolute
+                    addressingMode = AddressingMode.Absolute,
+                    targetExecutionTime = 6
                 ),
 
                 InstructionDefinition(
                     id = 0x3E,
-                    addressingMode = AddressingMode.AbsoluteX
+                    addressingMode = AddressingMode.AbsoluteX,
+                    targetExecutionTime = 7
                 )
             )
         )

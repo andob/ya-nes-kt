@@ -18,7 +18,8 @@ object BNEInstructionDefinitionFactory : InstructionGroupDefinitionFactory<Progr
             definitions = listOf(
                 InstructionDefinition(
                     id = 0xD0.toByte(),
-                    addressingMode = AddressingMode.Relative
+                    addressingMode = AddressingMode.Relative,
+                    targetExecutionTime = 3
                 )
             )
         )

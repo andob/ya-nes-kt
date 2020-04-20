@@ -38,7 +38,7 @@ com_crashlytics_export_strings.xml
 .metadata/
 /android-frontend/bin/
 /emulator/bin/
-/desktop-middleware/bin/
+/desktop-frontend/bin/
 *.tmp
 *.bak
 *.swp
@@ -53,27 +53,27 @@ com_crashlytics_export_strings.xml
 /nbproject/private/
 /android-frontend/nbproject/private/
 /emulator/nbproject/private/
-/desktop-middleware/nbproject/private/
+/desktop-frontend/nbproject/private/
 
 /build/
 /android-frontend/build/
 /emulator/build/
-/desktop-middleware/build/
+/desktop-frontend/build/
 
 /nbbuild/
 /android-frontend/nbbuild/
 /emulator/nbbuild/
-/desktop-middleware/nbbuild/
+/desktop-frontend/nbbuild/
 
 /dist/
 /android-frontend/dist/
 /emulator/dist/
-/desktop-middleware/dist/
+/desktop-frontend/dist/
 
 /nbdist/
 /android-frontend/nbdist/
 /emulator/nbdist/
-/desktop-middleware/nbdist/
+/desktop-frontend/nbdist/
 
 nbactions.xml
 nb-configuration.xml
@@ -86,7 +86,7 @@ gradle-app.setting
 /build/
 /android-frontend/build/
 /emulator/build/
-/desktop-middleware/build/
+/desktop-frontend/build/
 
 ## OS Specific
 .DS_Store

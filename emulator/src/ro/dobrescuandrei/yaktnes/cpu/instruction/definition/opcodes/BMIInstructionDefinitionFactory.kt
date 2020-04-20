@@ -18,7 +18,8 @@ object BMIInstructionDefinitionFactory : InstructionGroupDefinitionFactory<Progr
             definitions = listOf(
                 InstructionDefinition(
                     id = 0x30.toByte(),
-                    addressingMode = AddressingMode.Relative
+                    addressingMode = AddressingMode.Relative,
+                    targetExecutionTime = 3
                 )
             )
         )

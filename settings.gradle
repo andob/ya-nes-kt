@@ -1,4 +1,4 @@
 include 'emulator'
 include 'emulator-test'
-include 'desktop-middleware'
+include 'desktop-frontend'
 include 'android-frontend'

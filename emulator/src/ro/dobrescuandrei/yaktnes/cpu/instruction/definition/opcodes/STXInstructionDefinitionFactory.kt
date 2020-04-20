@@ -19,17 +19,20 @@ object STXInstructionDefinitionFactory : InstructionGroupDefinitionFactory<Point
 
                 InstructionDefinition(
                     id = 0x86.toByte(),
-                    addressingMode = AddressingMode.ZeroPage
+                    addressingMode = AddressingMode.ZeroPage,
+                    targetExecutionTime = 3
                 ),
 
                 InstructionDefinition(
                     id = 0x96.toByte(),
-                    addressingMode = AddressingMode.ZeroPageY
+                    addressingMode = AddressingMode.ZeroPageY,
+                    targetExecutionTime = 4
                 ),
 
                 InstructionDefinition(
                     id = 0x8E.toByte(),
-                    addressingMode = AddressingMode.Absolute
+                    addressingMode = AddressingMode.Absolute,
+                    targetExecutionTime = 4
                 )
             )
         )

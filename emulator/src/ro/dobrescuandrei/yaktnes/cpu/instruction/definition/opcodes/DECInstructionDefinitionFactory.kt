@@ -19,22 +19,26 @@ object DECInstructionDefinitionFactory : InstructionGroupDefinitionFactory<Point
 
                 InstructionDefinition(
                     id = 0xC6.toByte(),
-                    addressingMode = AddressingMode.ZeroPage
+                    addressingMode = AddressingMode.ZeroPage,
+                    targetExecutionTime = 5
                 ),
 
                 InstructionDefinition(
                     id = 0xD6.toByte(),
-                    addressingMode = AddressingMode.ZeroPageX
+                    addressingMode = AddressingMode.ZeroPageX,
+                    targetExecutionTime = 6
                 ),
 
                 InstructionDefinition(
                     id = 0xCE.toByte(),
-                    addressingMode = AddressingMode.Absolute
+                    addressingMode = AddressingMode.Absolute,
+                    targetExecutionTime = 6
                 ),
 
                 InstructionDefinition(
                     id = 0xDE.toByte(),
-                    addressingMode = AddressingMode.AbsoluteX
+                    addressingMode = AddressingMode.AbsoluteX,
+                    targetExecutionTime = 7
                 )
             )
         )

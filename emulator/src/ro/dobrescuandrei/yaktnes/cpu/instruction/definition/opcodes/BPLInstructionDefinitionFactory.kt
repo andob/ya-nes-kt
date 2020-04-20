@@ -18,7 +18,8 @@ object BPLInstructionDefinitionFactory : InstructionGroupDefinitionFactory<Progr
             definitions = listOf(
                 InstructionDefinition(
                     id = 0x10.toByte(),
-                    addressingMode = AddressingMode.Relative
+                    addressingMode = AddressingMode.Relative,
+                    targetExecutionTime = 3
                 )
             )
         )

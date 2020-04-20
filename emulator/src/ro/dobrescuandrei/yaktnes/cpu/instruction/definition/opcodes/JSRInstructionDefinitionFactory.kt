@@ -18,7 +18,8 @@ object JSRInstructionDefinitionFactory : InstructionGroupDefinitionFactory<Point
             definitions = listOf(
                 InstructionDefinition(
                     id = 0x20,
-                    addressingMode = AddressingMode.Absolute
+                    addressingMode = AddressingMode.Absolute,
+                    targetExecutionTime = 6
                 )
             )
         )

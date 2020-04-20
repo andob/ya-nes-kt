@@ -19,42 +19,50 @@ object LDAInstructionDefinitionFactory : InstructionGroupDefinitionFactory<Int8>
 
                 InstructionDefinition(
                     id = 0xA9.toByte(),
-                    addressingMode = AddressingMode.Immediate
+                    addressingMode = AddressingMode.Immediate,
+                    targetExecutionTime = 2
                 ),
 
                 InstructionDefinition(
                     id = 0xA5.toByte(),
-                    addressingMode = AddressingMode.ZeroPage
+                    addressingMode = AddressingMode.ZeroPage,
+                    targetExecutionTime = 3
                 ),
 
                 InstructionDefinition(
                     id = 0xB5.toByte(),
-                    addressingMode = AddressingMode.ZeroPageX
+                    addressingMode = AddressingMode.ZeroPageX,
+                    targetExecutionTime = 4
                 ),
 
                 InstructionDefinition(
                     id = 0xAD.toByte(),
-                    addressingMode = AddressingMode.Absolute
+                    addressingMode = AddressingMode.Absolute,
+                    targetExecutionTime = 4
                 ),
 
                 InstructionDefinition(
                     id = 0xBD.toByte(),
-                    addressingMode = AddressingMode.AbsoluteX
+                    addressingMode = AddressingMode.AbsoluteX,
+                    targetExecutionTime = 4
                 ),
 
                 InstructionDefinition(
                     id = 0xB9.toByte(),
-                    addressingMode = AddressingMode.AbsoluteY
+                    addressingMode = AddressingMode.AbsoluteY,
+                    targetExecutionTime = 4
                 ),
 
                 InstructionDefinition(
                     id = 0xA1.toByte(),
-                    addressingMode = AddressingMode.IndirectX
+                    addressingMode = AddressingMode.IndirectX,
+                    targetExecutionTime = 6
                 ),
 
                 InstructionDefinition(
                     id = 0xB1.toByte(),
-                    addressingMode = AddressingMode.IndirectY
+                    addressingMode = AddressingMode.IndirectY,
+                    targetExecutionTime = 5
                 )
             )
         )

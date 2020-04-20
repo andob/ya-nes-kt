@@ -42,7 +42,7 @@ class SnakeGameRenderer : ApplicationAdapter(), InputProcessor
 
     private val bitmapFont by lazy {
         val font=BitmapFont()
-        font.color=Color.WHITE
+        font.color=Color.LIGHT_GRAY
         return@lazy font
     }
 
@@ -54,8 +54,8 @@ class SnakeGameRenderer : ApplicationAdapter(), InputProcessor
     {
         companion object
         {
-            val width : Float get() = Gdx.graphics.width.toFloat()/32
-            val height : Float get() = Gdx.graphics.height.toFloat()/32
+            val width : Float = Gdx.graphics.width.toFloat()/32
+            val height : Float = Gdx.graphics.height.toFloat()/32
 
             private val positionPointerMatrix =
                 (0x0200 until 0x0600 step 0x20).toList().map { row ->
@@ -97,9 +97,9 @@ class SnakeGameRenderer : ApplicationAdapter(), InputProcessor
             val leastSignificantByte=NES.CPU_BUS[(0x11+blockIndex*2).toPointer()].toUByte().toByte()
             val positionPointer=Pointer(leastSignificantByte, mostSignificantByte)
 
-            blocks.add(Block.fromPositionPointer(positionPointer))
-
             bitmapFont.draw(spriteBatch, "SNAKE[$blockIndex] is at $positionPointer", 10.0f, 70.0f+20.0f*blockIndex)
+
+            blocks.add(Block.fromPositionPointer(positionPointer))
         }
 
         return blocks
@@ -109,7 +109,11 @@ class SnakeGameRenderer : ApplicationAdapter(), InputProcessor
     {
         this::class.java.classLoader.getResourceAsStream("snake6502.bin")!!.use { inputStream ->
             val machineCode=MachineCode(inputStream.readBytes())
-            Thread { NES.CPU.execute(machineCode) }.start()
+
+            Thread {
+                NES.CPU.clock=Clock.withSpeedInKiloHertz(25f)
+                NES.CPU.execute(machineCode)
+            }.start()
         }
 
         Gdx.input.inputProcessor=this
@@ -141,6 +145,7 @@ class SnakeGameRenderer : ApplicationAdapter(), InputProcessor
     {
         when(keycode)
         {
+            //todo how are key events handled on NES? is this a general rule?
             Input.Keys.UP -> NES.CPU_BUS[0xff.toPointer()]=0x77.toInt8()
             Input.Keys.DOWN -> NES.CPU_BUS[0xff.toPointer()]=0x73.toInt8()
             Input.Keys.LEFT -> NES.CPU_BUS[0xff.toPointer()]=0x61.toInt8()

@@ -1,3 +1,0 @@
-## emulator
-
-The emulator library.

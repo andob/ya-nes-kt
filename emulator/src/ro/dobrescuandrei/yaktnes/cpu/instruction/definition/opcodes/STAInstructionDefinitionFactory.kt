@@ -19,37 +19,44 @@ object STAInstructionDefinitionFactory : InstructionGroupDefinitionFactory<Point
 
                 InstructionDefinition(
                     id = 0x85.toByte(),
-                    addressingMode = AddressingMode.ZeroPage
+                    addressingMode = AddressingMode.ZeroPage,
+                    targetExecutionTime = 3
                 ),
 
                 InstructionDefinition(
                     id = 0x95.toByte(),
-                    addressingMode = AddressingMode.ZeroPageX
+                    addressingMode = AddressingMode.ZeroPageX,
+                    targetExecutionTime = 4
                 ),
 
                 InstructionDefinition(
                     id = 0x8D.toByte(),
-                    addressingMode = AddressingMode.Absolute
+                    addressingMode = AddressingMode.Absolute,
+                    targetExecutionTime = 4
                 ),
 
                 InstructionDefinition(
                     id = 0x9D.toByte(),
-                    addressingMode = AddressingMode.AbsoluteX
+                    addressingMode = AddressingMode.AbsoluteX,
+                    targetExecutionTime = 5
                 ),
 
                 InstructionDefinition(
                     id = 0x99.toByte(),
-                    addressingMode = AddressingMode.AbsoluteY
+                    addressingMode = AddressingMode.AbsoluteY,
+                    targetExecutionTime = 5
                 ),
 
                 InstructionDefinition(
                     id = 0x81.toByte(),
-                    addressingMode = AddressingMode.IndirectX
+                    addressingMode = AddressingMode.IndirectX,
+                    targetExecutionTime = 6
                 ),
 
                 InstructionDefinition(
                     id = 0x92.toByte(),
-                    addressingMode = AddressingMode.IndirectY
+                    addressingMode = AddressingMode.IndirectY,
+                    targetExecutionTime = 6
                 )
             )
         )

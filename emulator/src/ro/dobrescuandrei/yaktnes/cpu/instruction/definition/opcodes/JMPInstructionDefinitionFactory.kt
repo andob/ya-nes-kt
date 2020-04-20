@@ -19,12 +19,14 @@ object JMPInstructionDefinitionFactory : InstructionGroupDefinitionFactory<Point
 
                 InstructionDefinition(
                     id = 0x4C,
-                    addressingMode = AddressingMode.Absolute
+                    addressingMode = AddressingMode.Absolute,
+                    targetExecutionTime = 3
                 ),
 
                 InstructionDefinition(
                     id = 0x6C,
-                    addressingMode = AddressingMode.Indirect
+                    addressingMode = AddressingMode.Indirect,
+                    targetExecutionTime = 5
                 )
             )
         )

@@ -14,6 +14,6 @@ object NES
     val CPU get() = components.CPU
     val CPU_BUS get() = components.CPU_BUS
 
-    private var components=Components()
-    fun reset() { components=Components() }
+    private var components = Components()
+    fun reset() { components = Components() }
 }

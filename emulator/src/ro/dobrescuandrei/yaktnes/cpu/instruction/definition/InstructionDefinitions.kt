@@ -90,6 +90,4 @@ object InstructionDefinitions
                         return definition
         return null
     }
-
-    fun toList() = groupDefinitions
 }

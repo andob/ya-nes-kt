@@ -19,42 +19,50 @@ object ANDInstructionDefinitionFactory : InstructionGroupDefinitionFactory<Int8>
 
                 InstructionDefinition(
                     id = 0x29,
-                    addressingMode = AddressingMode.Immediate
+                    addressingMode = AddressingMode.Immediate,
+                    targetExecutionTime = 2
                 ),
 
                 InstructionDefinition(
                     id = 0x25,
-                    addressingMode = AddressingMode.ZeroPage
+                    addressingMode = AddressingMode.ZeroPage,
+                    targetExecutionTime = 3
                 ),
 
                 InstructionDefinition(
                     id = 0x35,
-                    addressingMode = AddressingMode.ZeroPageX
+                    addressingMode = AddressingMode.ZeroPageX,
+                    targetExecutionTime = 4
                 ),
 
                 InstructionDefinition(
                     id = 0x2D,
-                    addressingMode = AddressingMode.Absolute
+                    addressingMode = AddressingMode.Absolute,
+                    targetExecutionTime = 4
                 ),
 
                 InstructionDefinition(
                     id = 0x3D,
-                    addressingMode = AddressingMode.AbsoluteX
+                    addressingMode = AddressingMode.AbsoluteX,
+                    targetExecutionTime = 4
                 ),
 
                 InstructionDefinition(
                     id = 0x39,
-                    addressingMode = AddressingMode.AbsoluteY
+                    addressingMode = AddressingMode.AbsoluteY,
+                    targetExecutionTime = 4
                 ),
 
                 InstructionDefinition(
                     id = 0x21,
-                    addressingMode = AddressingMode.IndirectX
+                    addressingMode = AddressingMode.IndirectX,
+                    targetExecutionTime = 6
                 ),
 
                 InstructionDefinition(
                     id = 0x31,
-                    addressingMode = AddressingMode.IndirectY
+                    addressingMode = AddressingMode.IndirectY,
+                    targetExecutionTime = 5
                 )
             )
         )
