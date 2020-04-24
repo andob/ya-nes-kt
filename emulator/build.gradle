@@ -12,4 +12,7 @@ dependencies {
 
     //libgdx
     api "com.badlogicgames.gdx:gdx:$gdxVersion"
+
+    //reflection utils
+    implementation 'org.reflections:reflections:0.9.12'
 }
