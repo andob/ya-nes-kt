@@ -15,6 +15,9 @@ class InstructionWithPointerArgumentExecutionStrategy : InstructionExecutionStra
                 addressingMode = definition.addressingMode,
                 machineCode = machineCode)
 
+        //todo remove this print
+        println(definition.groupDefinition.name+" "+pointer)
+
         definition.groupDefinition.execution.invoke(pointer)
     }
 }

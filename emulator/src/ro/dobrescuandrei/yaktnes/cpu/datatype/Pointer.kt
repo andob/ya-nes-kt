@@ -67,3 +67,4 @@ fun Int.toPointer() = Pointer(this.toUShort())
 
 fun UShort.toPointerToMachineCode() = Pointer.ToMachineCode(this)
 fun Int.toPointerToMachineCode() = Pointer.ToMachineCode(this.toUShort())
+fun Pointer.toPointerToMachineCode() = Pointer.ToMachineCode(this.toUShort())

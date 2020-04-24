@@ -15,6 +15,9 @@ class InstructionWithInt8ArgumentExecutionStrategy : InstructionExecutionStrateg
                 addressingMode = definition.addressingMode,
                 machineCode = machineCode)
 
+        //todo remove this print
+        println(definition.groupDefinition.name+" "+value)
+
         definition.groupDefinition.execution.invoke(value)
     }
 }

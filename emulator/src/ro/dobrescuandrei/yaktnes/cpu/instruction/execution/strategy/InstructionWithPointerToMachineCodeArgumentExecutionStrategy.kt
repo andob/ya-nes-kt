@@ -17,6 +17,9 @@ class InstructionWithPointerToMachineCodeArgumentExecutionStrategy : Instruction
 
         val pointerToMachineCode=Pointer.ToMachineCode(pointer.toUShort())
 
+        //todo remove this print
+        println(definition.groupDefinition.name+" "+pointerToMachineCode)
+
         definition.groupDefinition.execution.invoke(pointerToMachineCode)
     }
 }

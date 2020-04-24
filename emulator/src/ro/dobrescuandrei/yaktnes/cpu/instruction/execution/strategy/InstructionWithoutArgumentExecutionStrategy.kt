@@ -9,6 +9,9 @@ class InstructionWithoutArgumentExecutionStrategy : InstructionExecutionStrategy
 
     override fun executeInstruction(definition : InstructionDefinition<Unit>, machineCode : MachineCode)
     {
+        //todo remove this print
+        println(definition.groupDefinition.name)
+
         definition.groupDefinition.execution.invoke(Unit)
     }
 }

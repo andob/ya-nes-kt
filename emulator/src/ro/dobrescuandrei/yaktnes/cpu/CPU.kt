@@ -71,7 +71,10 @@ class CPU
                 val expectedExecutionTimeInNs=definition.targetExecutionTime*clock.speedInNanoseconds
                 val actualExecutionTimeInNs=System.nanoTime()-startTimeInNs
                 if (actualExecutionTimeInNs>=expectedExecutionTimeInNs)
-                    System.err.println("WARNING!!! INTRUCTION TOOK TOO MUCH TIME TO RUN! ${definition.groupDefinition.name}")
+                {
+                    //todo enable this warning, benchmark and optimize execution!!!
+                    //System.err.println("WARNING!!! INTRUCTION TOOK TOO MUCH TIME TO RUN! ${definition.groupDefinition.name}")
+                }
                 else clock.await(deltaTimeInNs = expectedExecutionTimeInNs-actualExecutionTimeInNs)
             }
         }

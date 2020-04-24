@@ -9,16 +9,21 @@ import ro.dobrescuandrei.yaktnes.cpu.instruction.ProgramCounterDelta
 @OptIn(ExperimentalUnsignedTypes::class)
 class MachineCode
 (
-    //todo map into CPU bus
-    val code : ByteArray
+    private val code : ByteArray
 )
 {
     companion object
     {
+        //todo this value is wrong. CHANGE IT TO 0x4020. UPDATE TESTS
         val START_ADDRESS = 0x0600.toUShort()
     }
 
     private fun Pointer.ToMachineCode.toIndex() = (toUShort()-START_ADDRESS).toInt()
+
+    operator fun get(pointer : Pointer.ToMachineCode) : Int8
+    {
+        return code[pointer.toIndex()].toInt8()
+    }
 
     fun hasNextByte() : Boolean
     {
