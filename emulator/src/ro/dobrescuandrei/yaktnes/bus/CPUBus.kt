@@ -5,8 +5,15 @@ import ro.dobrescuandrei.yaktnes.cpu.datatype.Int8
 import ro.dobrescuandrei.yaktnes.cpu.datatype.toPointerToMachineCode
 
 //REFERENCE: http://wiki.nesdev.com/w/index.php/CPU_memory_map
-class CPUBus : Bus()
+open class CPUBus protected constructor() : Bus()
 {
+    companion object
+    {
+        //smart constructor
+        var factory = { CPUBus() }
+        operator fun invoke() = factory.invoke()
+    }
+
     //64KB of addressable space
     override val size get() = 0xFFFF
 

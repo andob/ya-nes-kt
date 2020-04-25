@@ -14,8 +14,7 @@ class MachineCode
 {
     companion object
     {
-        //todo this value is wrong. CHANGE IT TO 0x4020. UPDATE TESTS
-        val START_ADDRESS = 0x0600.toUShort()
+        val START_ADDRESS = 0x4020.toUShort()
     }
 
     private fun Pointer.ToMachineCode.toIndex() = (toUShort()-START_ADDRESS).toInt()

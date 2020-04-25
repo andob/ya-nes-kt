@@ -22,11 +22,8 @@ class BusAdapter
                 return true
 
             for (mirrorRange in mirrorRanges)
-            {
-                val unmirroredRange=addressRange.first..mirrorRange.last-mirrorRange.first+addressRange.first
-                if (address in unmirroredRange)
+                if (address in mirrorRange)
                     return true
-            }
 
             return false
         }

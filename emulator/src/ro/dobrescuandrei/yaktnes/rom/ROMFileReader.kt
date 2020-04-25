@@ -24,6 +24,7 @@ fun File.toNesRomFile() : ROMFile
         val characterRomSize=header[5].toUInt().toInt()*8*1024
 
         //todo parse various flags: header[6..15]
+        //todo implement mapper 0
 
         val programRom=ByteArray(size = programRomSize)
         inputStream.read(programRom)

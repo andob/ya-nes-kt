@@ -12,7 +12,7 @@ object NES
     class Components
     {
         val CPU : CPU = CPU()
-        val CPU_BUS : CPUBus=CPUBus()
+        val CPU_BUS : CPUBus = CPUBus()
         val RAM : RAM = RAM()
         val PPU : PPU = PPU()
         val APU : APU = APU()

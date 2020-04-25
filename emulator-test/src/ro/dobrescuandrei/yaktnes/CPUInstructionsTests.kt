@@ -17,63 +17,63 @@ class CPUInstructionsTests
         println("Loading constant 0x44 (68) into accumulator")
         exec("LDA", AddressingMode.Immediate, 0x44)
         assertEquals(NES.CPU.A, 0x44.toInt8())
-        assertEquals(NES.CPU.programCounter, 0x0602.toPointer())
+        assertEquals(NES.CPU.programCounter, 0x4022.toPointer())
         assertEquals(NES.CPU.status.Z, false)
         assertEquals(NES.CPU.status.N, false)
 
         println("Storing accumulator valur into address 0x99")
         exec("STA", AddressingMode.ZeroPage, 0x99.toByte())
         assertEquals(NES.CPU_BUS[0x0099.toPointer()], 0x44.toInt8())
-        assertEquals(NES.CPU.programCounter, 0x0604.toPointerToMachineCode())
+        assertEquals(NES.CPU.programCounter, 0x4024.toPointerToMachineCode())
 
         println("Loading constant 0x00 (0) into accumulator")
         exec("LDA", AddressingMode.Immediate, 0x00)
         assertEquals(NES.CPU.A, 0x00.toInt8())
-        assertEquals(NES.CPU.programCounter, 0x0606.toPointerToMachineCode())
+        assertEquals(NES.CPU.programCounter, 0x4026.toPointerToMachineCode())
         assertEquals(NES.CPU.status.Z, true)
         assertEquals(NES.CPU.status.N, false)
 
         println("Loading constant 0xff (-124) into accumulator")
         exec("LDA", AddressingMode.Immediate, 0xff.toByte())
         assertEquals(NES.CPU.A, 0xff.toInt8())
-        assertEquals(NES.CPU.programCounter, 0x0608.toPointerToMachineCode())
+        assertEquals(NES.CPU.programCounter, 0x4028.toPointerToMachineCode())
         assertEquals(NES.CPU.status.Z, false)
         assertEquals(NES.CPU.status.N, true)
 
         println("Loading value from zero page pointer 0x99 into accumulator")
         exec("LDA", AddressingMode.ZeroPage, 0x99.toByte())
         assertEquals(NES.CPU.A, 0x44.toInt8())
-        assertEquals(NES.CPU.programCounter, 0x060A.toPointerToMachineCode())
+        assertEquals(NES.CPU.programCounter, 0x402A.toPointerToMachineCode())
 
         println("Saving accumulator into zero page pointer 0x5f")
         exec("STA", AddressingMode.ZeroPage, 0x5f)
         assertEquals(NES.CPU_BUS[0x005f.toPointer()], 0x44.toInt8())
-        assertEquals(NES.CPU.programCounter, 0x060C.toPointerToMachineCode())
+        assertEquals(NES.CPU.programCounter, 0x402C.toPointerToMachineCode())
 
         println("Loading constant value 0xff into accumulator")
         exec("LDA", AddressingMode.Immediate, 0xff.toByte())
         assertEquals(NES.CPU.A, 0xff.toInt8())
-        assertEquals(NES.CPU.programCounter, 0x060E.toPointerToMachineCode())
+        assertEquals(NES.CPU.programCounter, 0x402E.toPointerToMachineCode())
 
         println("Loading value from zero page pointer 0x5f into accumulator")
         exec("LDA", AddressingMode.ZeroPage, 0x5f.toByte())
         assertEquals(NES.CPU.A, 0x44.toInt8())
-        assertEquals(NES.CPU.programCounter, 0x0610.toPointerToMachineCode())
+        assertEquals(NES.CPU.programCounter, 0x4030.toPointerToMachineCode())
 
         println("Saving value from accumulator into pointer with address 0x1234")
         exec("STA", AddressingMode.Absolute, 0x12, 0x34)
         assertEquals(NES.CPU_BUS[0x1234.toPointer()], 0x44.toInt8())
-        assertEquals(NES.CPU.programCounter, 0x0613.toPointerToMachineCode())
+        assertEquals(NES.CPU.programCounter, 0x4033.toPointerToMachineCode())
 
         println("Loading constant value 0xaa into accumulator")
         exec("LDA", AddressingMode.Immediate, 0xaa.toByte())
         assertEquals(NES.CPU.A, 0xaa.toInt8())
-        assertEquals(NES.CPU.programCounter, 0x0615.toPointerToMachineCode())
+        assertEquals(NES.CPU.programCounter, 0x4035.toPointerToMachineCode())
 
         println("Loading value from pointer with address 0x1234 into accumulator")
         exec("LDA", AddressingMode.Absolute, 0x12, 0x34)
         assertEquals(NES.CPU.A, 0x44.toInt8())
-        assertEquals(NES.CPU.programCounter, 0x0618.toPointerToMachineCode())
+        assertEquals(NES.CPU.programCounter, 0x4038.toPointerToMachineCode())
     }
 
     @Test
@@ -81,37 +81,37 @@ class CPUInstructionsTests
         println("Loading constant value 0x32 into X register")
         exec("LDX", AddressingMode.Immediate, 0x32)
         assertEquals(NES.CPU.X, 0x32.toInt8())
-        assertEquals(NES.CPU.programCounter, 0x0602.toPointerToMachineCode())
+        assertEquals(NES.CPU.programCounter, 0x4022.toPointerToMachineCode())
 
         println("Saving X register into zero page pointer with address 0x55")
         exec("STX", AddressingMode.ZeroPage, 0x55)
         assertEquals(NES.CPU_BUS[0x55.toPointer()], 0x32.toInt8())
-        assertEquals(NES.CPU.programCounter, 0x0604.toPointerToMachineCode())
+        assertEquals(NES.CPU.programCounter, 0x4024.toPointerToMachineCode())
 
         println("Loading constant value 0x64 into X register")
         exec("LDX", AddressingMode.Immediate, 0x64)
         assertEquals(NES.CPU.X, 0x64.toInt8())
-        assertEquals(NES.CPU.programCounter, 0x0606.toPointerToMachineCode())
+        assertEquals(NES.CPU.programCounter, 0x4026.toPointerToMachineCode())
 
         println("Loading value from pointer with address 0x55 into X register")
         exec("LDX", AddressingMode.ZeroPage, 0x55)
         assertEquals(NES.CPU.X, 0x32.toInt8())
-        assertEquals(NES.CPU.programCounter, 0x0608.toPointerToMachineCode())
+        assertEquals(NES.CPU.programCounter, 0x4028.toPointerToMachineCode())
 
         println("Saving X register into pointer with address 0x9876")
         exec("STX", AddressingMode.Absolute, 0x98.toByte(), 0x76)
         assertEquals(NES.CPU_BUS[0x9876.toPointer()], 0x32.toInt8())
-        assertEquals(NES.CPU.programCounter, 0x060B.toPointerToMachineCode())
+        assertEquals(NES.CPU.programCounter, 0x402B.toPointerToMachineCode())
 
         println("Loading constant value 0x64 into X register")
         exec("LDX", AddressingMode.Immediate, 0x64)
         assertEquals(NES.CPU.X, 0x64.toInt8())
-        assertEquals(NES.CPU.programCounter, 0x060D.toPointerToMachineCode())
+        assertEquals(NES.CPU.programCounter, 0x402D.toPointerToMachineCode())
 
         println("Loading value from pointer with address 0x9876 into X register")
         exec("LDX", AddressingMode.Absolute, 0x98.toByte(), 0x76)
         assertEquals(NES.CPU.X, 0x32.toInt8())
-        assertEquals(NES.CPU.programCounter, 0x0610.toPointerToMachineCode())
+        assertEquals(NES.CPU.programCounter, 0x4030.toPointerToMachineCode())
     }
 
     @Test
@@ -119,37 +119,37 @@ class CPUInstructionsTests
         println("Loading constant value 0x32 into Y register")
         exec("LDY", AddressingMode.Immediate, 0x32)
         assertEquals(NES.CPU.Y, 0x32.toInt8())
-        assertEquals(NES.CPU.programCounter, 0x0602.toPointerToMachineCode())
+        assertEquals(NES.CPU.programCounter, 0x4022.toPointerToMachineCode())
 
         println("Saving Y register into zero page pointer with address 0x55")
         exec("STY", AddressingMode.ZeroPage, 0x55)
         assertEquals(NES.CPU_BUS[0x55.toPointer()], 0x32.toInt8())
-        assertEquals(NES.CPU.programCounter, 0x0604.toPointerToMachineCode())
+        assertEquals(NES.CPU.programCounter, 0x4024.toPointerToMachineCode())
 
         println("Loading constant value 0x64 into Y register")
         exec("LDY", AddressingMode.Immediate, 0x64)
         assertEquals(NES.CPU.Y, 0x64.toInt8())
-        assertEquals(NES.CPU.programCounter, 0x0606.toPointerToMachineCode())
+        assertEquals(NES.CPU.programCounter, 0x4026.toPointerToMachineCode())
 
         println("Loading value from pointer with address 0x55 into Y register")
         exec("LDY", AddressingMode.ZeroPage, 0x55)
         assertEquals(NES.CPU.Y, 0x32.toInt8())
-        assertEquals(NES.CPU.programCounter, 0x0608.toPointerToMachineCode())
+        assertEquals(NES.CPU.programCounter, 0x4028.toPointerToMachineCode())
 
         println("Saving Y register into pointer with address 0x9876")
         exec("STY", AddressingMode.Absolute, 0x98.toByte(), 0x76)
         assertEquals(NES.CPU_BUS[0x9876.toPointer()], 0x32.toInt8())
-        assertEquals(NES.CPU.programCounter, 0x060B.toPointerToMachineCode())
+        assertEquals(NES.CPU.programCounter, 0x402B.toPointerToMachineCode())
 
         println("Loading constant value 0x64 into Y register")
         exec("LDY", AddressingMode.Immediate, 0x64)
         assertEquals(NES.CPU.Y, 0x64.toInt8())
-        assertEquals(NES.CPU.programCounter, 0x060D.toPointerToMachineCode())
+        assertEquals(NES.CPU.programCounter, 0x402D.toPointerToMachineCode())
 
         println("Loading value from pointer with address 0x9876 into Y register")
         exec("LDY", AddressingMode.Absolute, 0x98.toByte(), 0x76)
         assertEquals(NES.CPU.Y, 0x32.toInt8())
-        assertEquals(NES.CPU.programCounter, 0x0610.toPointerToMachineCode())
+        assertEquals(NES.CPU.programCounter, 0x4030.toPointerToMachineCode())
     }
 
     @Test
@@ -581,7 +581,7 @@ class CPUInstructionsTests
             val machineCode=assemble {
                 asm("LDA", AddressingMode.Immediate, 0xAA.toByte())
                 asm("LDY", AddressingMode.Immediate, 0x10.toByte())
-                asm("JSR", AddressingMode.Absolute, 0x06.toByte(), 0x07.toByte())
+                asm("JSR", AddressingMode.Absolute, 0x40.toByte(), 0x27.toByte())
                 asm("PHA", AddressingMode.Implicit)
                 asm("PHP", AddressingMode.Implicit)
                 asm("LDA", AddressingMode.Immediate, 0x00.toByte())
@@ -596,7 +596,7 @@ class CPUInstructionsTests
             NES.CPU.execute(machineCode)
             assertEquals(NES.CPU.A, 0xAA.toInt8())
             assertEquals(NES.CPU.Y, 0x12.toInt8())
-            assertEquals(NES.CPU.programCounter, 0x0614.toPointerToMachineCode())
+            assertEquals(NES.CPU.programCounter, 0x4034.toPointerToMachineCode())
             assertEquals(NES.CPU.status.toByte(), 0xB0.toByte())
             assertEquals(NES.CPU.stack.stackPointer, 0xFF.toInt8())
         }
@@ -648,7 +648,7 @@ class CPUInstructionsTests
         withCPUTestEnvironment {
             val machineCode=assemble {
                 asm("LDX", AddressingMode.Immediate, 0x11.toByte())
-                asm("JMP", AddressingMode.Absolute, 0x06.toByte(), 0x06.toByte())
+                asm("JMP", AddressingMode.Absolute, 0x40.toByte(), 0x26.toByte())
                 asm("INX", AddressingMode.Implicit)
                 asm("INX", AddressingMode.Implicit)
             }
@@ -660,9 +660,9 @@ class CPUInstructionsTests
         println("Test jump at indirect address")
         withCPUTestEnvironment {
             val machineCode=assemble {
-                asm("LDA", AddressingMode.Immediate, 0x06.toByte())
+                asm("LDA", AddressingMode.Immediate, 0x40.toByte())
                 asm("STA", AddressingMode.ZeroPage, 0x10.toByte())
-                asm("LDA", AddressingMode.Immediate, 0x0E.toByte())
+                asm("LDA", AddressingMode.Immediate, 0x2E.toByte())
                 asm("STA", AddressingMode.ZeroPage, 0x11.toByte())
                 asm("LDX", AddressingMode.Immediate, 0x11.toByte())
                 asm("JMP", AddressingMode.Indirect, 0x00.toByte(), 0x10.toByte())

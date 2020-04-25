@@ -33,10 +33,14 @@ abstract class Bus
     operator fun set(pointer : Pointer, value : Int8)
     {
         if (pointer is Pointer.ToAccumulator)
+        {
             NES.CPU.A=value
-
-        adapter.getMapping(pointer.toIndex())?.let { mapping ->
-            return mapping.writer.invoke(mapping.targetDevice, pointer, value)
+        }
+        else
+        {
+            adapter.getMapping(pointer.toIndex())?.let { mapping ->
+                return mapping.writer.invoke(mapping.targetDevice, pointer, value)
+            }
         }
     }
 }

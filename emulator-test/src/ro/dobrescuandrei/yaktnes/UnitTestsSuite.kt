@@ -6,6 +6,7 @@ import org.junit.runners.Suite
 @RunWith(Suite::class)
 @Suite.SuiteClasses
 (
-    CPUInstructionsTests::class
+    CPUInstructionsTests::class,
+    CPUBusTests::class
 )
 class UnitTestsSuite

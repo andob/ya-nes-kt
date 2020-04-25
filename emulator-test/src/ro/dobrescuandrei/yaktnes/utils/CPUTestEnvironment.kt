@@ -2,16 +2,25 @@ package ro.dobrescuandrei.yaktnes.utils
 
 import org.junit.Assert.*
 import ro.dobrescuandrei.yaktnes.NES
+import ro.dobrescuandrei.yaktnes.bus.BusAdapter
+import ro.dobrescuandrei.yaktnes.bus.CPUBus
 import ro.dobrescuandrei.yaktnes.cpu.MachineCode
+import ro.dobrescuandrei.yaktnes.cpu.datatype.toInt8
 import ro.dobrescuandrei.yaktnes.cpu.instruction.addressing_mode.AddressingMode
 import ro.dobrescuandrei.yaktnes.cpu.instruction.definition.InstructionDefinition
 import ro.dobrescuandrei.yaktnes.cpu.instruction.definition.InstructionDefinitions
 
 fun withCPUTestEnvironment(block : CPUTestEnvironment.() -> (Unit))
 {
+    val previousCPUBusFactory=CPUBus.factory
+
+    CPUBus.factory={ DummyCPUBus() }
+
     NES.reset()
 
     block(CPUTestEnvironment())
+
+    CPUBus.factory=previousCPUBusFactory
 }
 
 class CPUTestEnvironment
@@ -112,5 +121,30 @@ class CPUTestEnvironment
             machineCodeBytes+=byteArrayOf(definition.id)
             machineCodeBytes+=arguments.reversed()
         }
+    }
+}
+
+fun assemble(sourceCodeProvider : CPUTestEnvironment.AssemblerContext.() -> Unit) : MachineCode
+{
+    val assemblerContext=CPUTestEnvironment.AssemblerContext()
+    sourceCodeProvider.invoke(assemblerContext)
+    return MachineCode(assemblerContext.machineCodeBytes)
+}
+
+private class DummyCPUBus : CPUBus()
+{
+    private val dummyRAM = ByteArray(size = size)
+
+    override fun instantiateAdapter() : BusAdapter
+    {
+        val adapter=BusAdapter()
+
+        adapter.addMapping(BusAdapter.Mapping(
+            addressRange = 0x0000..size,
+            targetDevice = dummyRAM,
+            reader = { RAM, pointer -> RAM[pointer.toUInt().toInt()].toInt8() },
+            writer = { RAM, pointer, value -> RAM[pointer.toUInt().toInt()]=value.toByte() }))
+
+        return adapter
     }
 }
