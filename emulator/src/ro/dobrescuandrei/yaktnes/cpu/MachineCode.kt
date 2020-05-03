@@ -24,6 +24,11 @@ class MachineCode
         return code[pointer.toIndex()].toInt8()
     }
 
+    operator fun set(pointer : Pointer.ToMachineCode, value : Int8)
+    {
+        code[pointer.toIndex()]=value.toByte()
+    }
+
     fun hasNextByte() : Boolean
     {
         return NES.CPU.programCounter.toIndex()<code.size

@@ -50,7 +50,10 @@ open class CPUBus protected constructor() : Bus()
                     runningRomFile.machineCode[pointer.toPointerToMachineCode()]
                 else Int8.Zero
             },
-            writer = { PPU, pointer, value -> }))
+            writer = { runningRomFile, pointer, value ->
+                if (runningRomFile!=null)
+                    runningRomFile.machineCode[pointer.toPointerToMachineCode()]=value
+            }))
 
         return adapter
     }
