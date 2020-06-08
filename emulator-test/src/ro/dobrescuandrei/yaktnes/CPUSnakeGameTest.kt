@@ -16,6 +16,7 @@ import ro.dobrescuandrei.yaktnes.cpu.datatype.Pointer
 import ro.dobrescuandrei.yaktnes.cpu.datatype.nextInt8
 import ro.dobrescuandrei.yaktnes.cpu.datatype.toInt8
 import ro.dobrescuandrei.yaktnes.cpu.datatype.toPointer
+import ro.dobrescuandrei.yaktnes.utils.withCPUTestEnvironment
 import kotlin.random.Random
 
 //SNAKE GAME SOURCE CODE: https://gist.github.com/wkjagt/9043907
@@ -111,8 +112,10 @@ class SnakeGameRenderer : ApplicationAdapter(), InputProcessor
             val machineCode=MachineCode(inputStream.readBytes())
 
             Thread {
-                NES.CPU.clock=Clock.withSpeedInKiloHertz(25f)
-                NES.CPU.execute(machineCode)
+                withCPUTestEnvironment {
+                    NES.CPU.clock=Clock.withSpeedInKiloHertz(25f)
+                    NES.CPU.execute(machineCode)
+                }
             }.start()
         }
 
@@ -125,7 +128,6 @@ class SnakeGameRenderer : ApplicationAdapter(), InputProcessor
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
 
         //0xFE always contains a random number
-        //todo how are random numbers generated on NES? is this a general rule?
         NES.CPU_BUS[0xFE.toPointer()]=randomiser.nextInt8()
 
         shapeRenderer.begin()
@@ -145,7 +147,6 @@ class SnakeGameRenderer : ApplicationAdapter(), InputProcessor
     {
         when(keycode)
         {
-            //todo how are key events handled on NES? is this a general rule?
             Input.Keys.UP -> NES.CPU_BUS[0xff.toPointer()]=0x77.toInt8()
             Input.Keys.DOWN -> NES.CPU_BUS[0xff.toPointer()]=0x73.toInt8()
             Input.Keys.LEFT -> NES.CPU_BUS[0xff.toPointer()]=0x61.toInt8()
