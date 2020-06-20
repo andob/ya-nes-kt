@@ -1,6 +1,7 @@
 package ro.dobrescuandrei.yaktnes.rom
 
 import ro.dobrescuandrei.yaktnes.cpu.MachineCode
+import ro.dobrescuandrei.yaktnes.ppu.CharacterRom
 import java.io.File
 
 class ROMFile
@@ -12,5 +13,5 @@ class ROMFile
     val machineCode : MachineCode,
 
     //character ROM contains graphics
-    val characterRom : ByteArray
+    val characterRom : CharacterRom
 )

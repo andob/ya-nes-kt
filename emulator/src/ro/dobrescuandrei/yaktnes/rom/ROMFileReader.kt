@@ -1,6 +1,7 @@
 package ro.dobrescuandrei.yaktnes.rom
 
 import ro.dobrescuandrei.yaktnes.cpu.MachineCode
+import ro.dobrescuandrei.yaktnes.ppu.CharacterRom
 import java.io.File
 
 fun File.toNesRomFile() : ROMFile
@@ -26,15 +27,14 @@ fun File.toNesRomFile() : ROMFile
         //todo parse various flags: header[6..15]
         //todo implement mapper 0
 
-        val programRom=ByteArray(size = programRomSize)
-        inputStream.read(programRom)
+        val programRomBytes=ByteArray(size = programRomSize)
+        inputStream.read(programRomBytes)
 
-        val characterRom=ByteArray(size = characterRomSize)
-        inputStream.read(characterRom)
+        val characterRomBytes=ByteArray(size = characterRomSize)
+        inputStream.read(characterRomBytes)
 
-        return ROMFile(
-            file = file,
-            machineCode = MachineCode(programRom),
-            characterRom = characterRom)
+        return ROMFile(file = file,
+            machineCode = MachineCode(programRomBytes),
+            characterRom = CharacterRom(characterRomBytes))
     }
 }

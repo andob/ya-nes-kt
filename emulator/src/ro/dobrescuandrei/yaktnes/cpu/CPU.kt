@@ -73,7 +73,7 @@ class CPU
                 if (actualExecutionTimeInNs>=expectedExecutionTimeInNs)
                 {
                     //todo enable this warning, benchmark and optimize execution!!!
-                    System.err.println("WARNING!!! INTRUCTION TOOK TOO MUCH TIME TO RUN! ${definition.groupDefinition.name}")
+//                    System.err.println("WARNING!!! INTRUCTION TOOK TOO MUCH TIME TO RUN! ${definition.groupDefinition.name}")
                 }
                 else clock.await(deltaTimeInNs = expectedExecutionTimeInNs-actualExecutionTimeInNs)
             }

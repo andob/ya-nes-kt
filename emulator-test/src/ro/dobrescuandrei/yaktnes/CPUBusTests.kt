@@ -8,6 +8,7 @@ import ro.dobrescuandrei.yaktnes.cpu.datatype.toPointer
 import ro.dobrescuandrei.yaktnes.cpu.datatype.toPointerToMachineCode
 import ro.dobrescuandrei.yaktnes.cpu.instruction.addressing_mode.AddressingMode
 import ro.dobrescuandrei.yaktnes.cpu.instruction.definition.InstructionDefinitions
+import ro.dobrescuandrei.yaktnes.ppu.CharacterRom
 import ro.dobrescuandrei.yaktnes.rom.ROMFile
 import ro.dobrescuandrei.yaktnes.utils.assemble
 import java.io.File
@@ -60,7 +61,7 @@ class CPUBusTests
         NES.execute(ROMFile(
             file = File("dummy"),
             machineCode = machineCode,
-            characterRom = ByteArray(size = 0)))
+            characterRom = CharacterRom(ByteArray(size = 0))))
 
         assertEquals(NES.CPU_BUS[0x4020.toPointerToMachineCode()], InstructionDefinitions["LDA", AddressingMode.Immediate]!!.id.toInt8())
         assertEquals(NES.CPU_BUS[0x4021.toPointerToMachineCode()], 0x0A.toInt8())

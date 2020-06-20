@@ -3,6 +3,7 @@ package ro.dobrescuandrei.yaktnes
 import ro.dobrescuandrei.yaktnes.apu.APU
 import ro.dobrescuandrei.yaktnes.cpu.CPU
 import ro.dobrescuandrei.yaktnes.bus.CPUBus
+import ro.dobrescuandrei.yaktnes.bus.PPUBus
 import ro.dobrescuandrei.yaktnes.ppu.PPU
 import ro.dobrescuandrei.yaktnes.ram.RAM
 import ro.dobrescuandrei.yaktnes.rom.ROMFile
@@ -15,6 +16,7 @@ object NES
         val CPU_BUS : CPUBus = CPUBus()
         val RAM : RAM = RAM()
         val PPU : PPU = PPU()
+        val PPU_BUS : PPUBus = PPUBus()
         val APU : APU = APU()
         var RunningRomFile : ROMFile? = null
     }
@@ -23,6 +25,7 @@ object NES
     val CPU_BUS get() = components.CPU_BUS
     val RAM get() = components.RAM
     val PPU get() = components.PPU
+    val PPU_BUS get() = components.PPU_BUS
     val APU get() = components.APU
     val RunningRomFile get() = components.RunningRomFile
 
@@ -33,6 +36,7 @@ object NES
     {
         components.RunningRomFile=romFile
 
-        CPU.execute(romFile.machineCode)
+        //todo uncomment this
+//        CPU.execute(romFile.machineCode)
     }
 }
