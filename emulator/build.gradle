@@ -6,6 +6,8 @@ sourceCompatibility = 1.8
 
 sourceSets.main.java.srcDirs = [ "src/" ]
 
+compileKotlin.kotlinOptions.freeCompilerArgs += "-Xopt-in=kotlin.ExperimentalUnsignedTypes"
+
 dependencies {
     //kotlin stdlib
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"

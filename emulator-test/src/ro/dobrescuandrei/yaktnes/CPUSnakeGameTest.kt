@@ -27,7 +27,6 @@ fun main()
     LwjglApplication(SnakeGameRenderer(), config)
 }
 
-@ExperimentalUnsignedTypes
 class SnakeGameRenderer : ApplicationAdapter(), InputProcessor
 {
     private val randomiser = Random(System.currentTimeMillis())

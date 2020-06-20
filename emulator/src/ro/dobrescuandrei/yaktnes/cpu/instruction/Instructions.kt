@@ -230,7 +230,6 @@ internal fun jmp(pointer : Pointer.ToMachineCode)
 }
 
 //JSR = Jump to SubRoutine
-@ExperimentalUnsignedTypes
 internal fun jsr(pointer : Pointer.ToMachineCode)
 {
     NES.CPU.stack.push(NES.CPU.programCounter.getLeastSignificantByte().toInt8())

@@ -1,14 +1,15 @@
 package ro.dobrescuandrei.yaktnes.ppu
 
 import com.badlogic.gdx.graphics.Color
+import ro.dobrescuandrei.yaktnes.ppu.color.ColorPalette
 
-typealias ShortMatrix = Array<ShortArray>
+typealias ByteMatrix = Array<ByteArray>
 typealias ColorMatrix = Array<Array<Color>>
 
 class Tile
 private constructor
 (
-    private val pixelPattern : ShortMatrix
+    private val pixelPattern : ByteMatrix
 )
 {
     companion object
@@ -28,9 +29,9 @@ private constructor
                 val leastSignificantBitPlane=bytes[y].toIntArrayWithBits()
                 val mostSignificantBitPlane=bytes[y+8].toIntArrayWithBits()
 
-                return@pixelPattern ShortArray(size = 8, init = { x ->
+                return@pixelPattern ByteArray(size = 8, init = { x ->
                     mostSignificantBitPlane[x].shl(1)
-                        .or(leastSignificantBitPlane[x]).toShort()
+                        .or(leastSignificantBitPlane[x]).toByte()
                 })
             })
 
@@ -39,16 +40,11 @@ private constructor
     }
 
     //todo test this
-    fun toColorMatrix() : ColorMatrix
+    fun toColorMatrix(colorPalette : ColorPalette) : ColorMatrix
     {
-        //todo remove this
-        fun Short.toColor() = when(this)
-        {
-            0.toShort() -> Color.RED
-            1.toShort() -> Color.GREEN
-            2.toShort() -> Color.BLUE
-            else -> Color.CLEAR
-        }
+        fun Byte.toColor() =
+            colorPalette.colors.getOrNull(index = this.toInt()-1)
+                ?:colorPalette.universalBackgroundColor
 
         return Array(size = 8, init = { y ->
             Array(size = 8, init = { x ->

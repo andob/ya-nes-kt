@@ -2,6 +2,8 @@ package ro.dobrescuandrei.yaktnes.bus
 
 import ro.dobrescuandrei.yaktnes.NES
 import ro.dobrescuandrei.yaktnes.cpu.datatype.Int8
+import ro.dobrescuandrei.yaktnes.ppu.color.ColorFactory
+import ro.dobrescuandrei.yaktnes.ppu.color.toInt8
 
 //todo unit test this
 //REFERENCE: https://wiki.nesdev.com/w/index.php/PPU_memory_map
@@ -40,8 +42,17 @@ open class PPUBus protected constructor() : Bus()
 //        $2800-$2BFF 	$0400 	Nametable 2
 //        $2C00-$2FFF 	$0400 	Nametable 3
 //        $3000-$3EFF 	$0F00 	Mirrors of $2000-$2EFF
-//        $3F00-$3F1F 	$0020 	Palette RAM indexes
-//        $3F20-$3FFF 	$00E0 	Mirrors of $3F00-$3F1F
+
+        adapter.addMapping(BusAdapter.Mapping(
+            addressRange = 0x3F00..0x3F1F,
+            mirrorRanges = (0x3F20..0x3FFF step 16).map { it..it+15 },
+            targetDevice = NES.PPU.colorPalettes,
+            reader = { colorPalettes, pointer ->
+                colorPalettes[pointer].toInt8()
+            },
+            writer = { colorPalettes, pointer, color ->
+                colorPalettes[pointer]= ColorFactory.newColor(color.toByte())
+            }))
 
         return adapter
     }

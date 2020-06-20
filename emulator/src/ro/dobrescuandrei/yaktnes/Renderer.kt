@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import ro.dobrescuandrei.yaktnes.cpu.datatype.Pointer
+import ro.dobrescuandrei.yaktnes.cpu.datatype.toPointer
 import ro.dobrescuandrei.yaktnes.ppu.ColorMatrix
 
 class Renderer : ApplicationAdapter()
@@ -25,10 +26,16 @@ class Renderer : ApplicationAdapter()
     {
         super.create()
 
+        NES.PPU.colorPalettes[0x3F00.toPointer()]=Color.CLEAR
+        NES.PPU.colorPalettes[0x3F01.toPointer()]=Color.RED
+        NES.PPU.colorPalettes[0x3F02.toPointer()]=Color.GREEN
+        NES.PPU.colorPalettes[0x3F03.toPointer()]=Color.BLUE
+
+        val colorPalette=NES.PPU.colorPalettes.getBackgroundPalettes().first()
         val numberOfTiles=NES.RunningRomFile!!.characterRom.rom.size/16
         val pointersToTiles=(0 until numberOfTiles).map { Pointer((it*16).toUShort()) }
         val tiles=pointersToTiles.map { NES.RunningRomFile!!.characterRom.getTile(it) }
-        tileColorMatrices=tiles.map { it.toColorMatrix() }
+        tileColorMatrices=tiles.map { it.toColorMatrix(colorPalette) }
     }
 
     override fun render()
@@ -54,7 +61,7 @@ class Renderer : ApplicationAdapter()
         if (renderingStep>=tileColorMatrices.size)
             renderingStep=0
 
-        Thread.sleep(1000)
+        Thread.sleep(250)
     }
 
     override fun dispose()

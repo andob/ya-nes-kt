@@ -3,7 +3,6 @@ package ro.dobrescuandrei.yaktnes.cpu.datatype
 import ro.dobrescuandrei.yaktnes.cpu.MachineCode
 import ro.dobrescuandrei.yaktnes.cpu.instruction.ProgramCounterDelta
 
-@OptIn(ExperimentalUnsignedTypes::class)
 open class Pointer
 (
     //16-bit address (0x0000 -> 0xFFFF)
