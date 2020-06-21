@@ -16,6 +16,7 @@ import ro.dobrescuandrei.yaktnes.cpu.datatype.Pointer
 import ro.dobrescuandrei.yaktnes.cpu.datatype.nextInt8
 import ro.dobrescuandrei.yaktnes.cpu.datatype.toInt8
 import ro.dobrescuandrei.yaktnes.cpu.datatype.toPointer
+import ro.dobrescuandrei.yaktnes.utils.Clock
 import ro.dobrescuandrei.yaktnes.utils.withCPUTestEnvironment
 import kotlin.random.Random
 
@@ -112,7 +113,7 @@ class SnakeGameRenderer : ApplicationAdapter(), InputProcessor
 
             Thread {
                 withCPUTestEnvironment {
-                    NES.CPU.clock=Clock.withSpeedInKiloHertz(25f)
+                    NES.CPU.clock= Clock.withSpeedInKiloHertz(25f)
                     NES.CPU.execute(machineCode)
                 }
             }.start()

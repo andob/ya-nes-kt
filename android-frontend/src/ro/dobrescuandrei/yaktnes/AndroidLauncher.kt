@@ -3,6 +3,7 @@ package ro.dobrescuandrei.yaktnes
 import android.os.Bundle
 import com.badlogic.gdx.backends.android.AndroidApplication
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration
+import ro.dobrescuandrei.yaktnes.ppu.Renderer
 
 class AndroidLauncher : AndroidApplication()
 {

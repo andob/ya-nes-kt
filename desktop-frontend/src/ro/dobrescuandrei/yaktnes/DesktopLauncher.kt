@@ -2,6 +2,7 @@ package ro.dobrescuandrei.yaktnes
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration
+import ro.dobrescuandrei.yaktnes.ppu.Renderer
 import ro.dobrescuandrei.yaktnes.rom.toNesRomFile
 import java.io.File
 

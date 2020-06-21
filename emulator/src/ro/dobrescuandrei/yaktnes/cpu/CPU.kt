@@ -1,6 +1,6 @@
 package ro.dobrescuandrei.yaktnes.cpu
 
-import ro.dobrescuandrei.yaktnes.Clock
+import ro.dobrescuandrei.yaktnes.utils.Clock
 import ro.dobrescuandrei.yaktnes.cpu.datatype.Int8
 import ro.dobrescuandrei.yaktnes.cpu.datatype.Pointer
 import ro.dobrescuandrei.yaktnes.cpu.instruction.definition.InstructionDefinitions

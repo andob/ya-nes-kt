@@ -1,4 +1,4 @@
-package ro.dobrescuandrei.yaktnes
+package ro.dobrescuandrei.yaktnes.utils
 
 class Clock
 (
@@ -18,14 +18,14 @@ class Clock
         {
             //1.66 MHz = 1660 kHz = 1660000 Hz
             val speedInHertz=(speedInKHz*1000).toInt()
-            return Clock.withSpeedInHertz(speedInHertz)
+            return withSpeedInHertz(speedInHertz)
         }
 
         fun withSpeedInMegaHertz(speedInMHz : Float) : Clock
         {
             //1.66 MHz = 1660 kHz = 1660000 Hz
             val speedInKiloHertz=speedInMHz*1000
-            return Clock.withSpeedInKiloHertz(speedInKiloHertz)
+            return withSpeedInKiloHertz(speedInKiloHertz)
         }
     }
 

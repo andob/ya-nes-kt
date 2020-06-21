@@ -18,8 +18,8 @@ class CPUAddressRegister : PPURegister()
     override fun update(value : Byte)
     {
         if (isIterationEven)
-            mostSignificantByte=value
-        else leastSignificantByte=value
+            leastSignificantByte=value
+        else mostSignificantByte=value
 
         lastWrittenByte=value
 
