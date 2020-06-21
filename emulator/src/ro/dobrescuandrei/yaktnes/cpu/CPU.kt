@@ -5,6 +5,7 @@ import ro.dobrescuandrei.yaktnes.cpu.datatype.Int8
 import ro.dobrescuandrei.yaktnes.cpu.datatype.Pointer
 import ro.dobrescuandrei.yaktnes.cpu.instruction.definition.InstructionDefinitions
 import ro.dobrescuandrei.yaktnes.cpu.instruction.execution.InstructionExecutor
+import ro.dobrescuandrei.yaktnes.utils.toInt
 
 class CPU
 {
@@ -32,8 +33,6 @@ class CPU
         var C : Boolean = false  //is carry mode enabled?
     )
     {
-        private fun Boolean.toInt() = if (this) 1 else 0
-
         fun toByte() =
             0x00.or(N.toInt()).shl(1)
                 .or(V.toInt()).shl(1)

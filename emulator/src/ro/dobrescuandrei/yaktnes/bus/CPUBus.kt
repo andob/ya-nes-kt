@@ -28,19 +28,31 @@ open class CPUBus protected constructor() : Bus()
             reader = { RAM, pointer -> RAM[pointer] },
             writer = { RAM, pointer, value -> RAM[pointer]=value }))
 
-
+        //todo test this mapping
         adapter.addMapping(BusAdapter.Mapping(
             addressRange = 0x2000..0x2007,
             mirrorRanges = (0x2008..0x3FF8 step 8).map { it..it+7 },
             targetDevice = NES.PPU,
-            reader = { PPU, pointer -> Int8.Zero },
-            writer = { PPU, pointer, value -> }))
+            reader = { PPU, pointer -> PPU[pointer] },
+            writer = { PPU, pointer, value -> PPU[pointer]=value }))
 
         adapter.addMapping(BusAdapter.Mapping(
-            addressRange = 0x4000..0x4017,
+            addressRange = 0x4000..0x4013,
             targetDevice = NES.APU,
-            reader = { PPU, pointer -> Int8.Zero },
-            writer = { PPU, pointer, value -> }))
+            reader = { APU, pointer -> Int8.Zero },
+            writer = { APU, pointer, value -> }))
+
+        adapter.addMapping(BusAdapter.Mapping(
+            addressRange = 0x4014..0x4014,
+            targetDevice = NES.PPU,
+            reader = { PPU, pointer -> PPU[pointer] },
+            writer = { PPU, pointer, value -> PPU[pointer]=value }))
+
+        adapter.addMapping(BusAdapter.Mapping(
+                addressRange = 0x4015..0x4017,
+                targetDevice = NES.APU,
+                reader = { APU, pointer -> Int8.Zero },
+                writer = { APU, pointer, value -> }))
 
         adapter.addMapping(BusAdapter.Mapping(
             addressRange = 0x4020..0xFFFF,

@@ -2,6 +2,7 @@ package ro.dobrescuandrei.yaktnes.ppu
 
 import com.badlogic.gdx.graphics.Color
 import ro.dobrescuandrei.yaktnes.ppu.color.ColorPalette
+import ro.dobrescuandrei.yaktnes.utils.toIntArrayWithBits
 
 typealias ByteMatrix = Array<ByteArray>
 typealias ColorMatrix = Array<Array<Color>>
@@ -20,10 +21,6 @@ private constructor
         {
             if (bytes.size!=16)
                 throw RuntimeException("Invalid bytecode! A tile must be 16 bytes!")
-
-            fun Byte.toIntArrayWithBits() = IntArray(size = 8, init = { i ->
-                this.toInt().shr(i).and(0x01)
-            })
 
             val pixelPattern=Array(size = 8, init = pixelPattern@ { y ->
                 val leastSignificantBitPlane=bytes[y].toIntArrayWithBits()
