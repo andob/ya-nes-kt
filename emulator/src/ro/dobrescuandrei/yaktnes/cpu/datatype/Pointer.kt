@@ -42,7 +42,7 @@ open class Pointer
         "HEX: ${String.format("%04x", address.toShort())}"
 
     //special type of Pointer - the operation should be applied on CPU accumulator
-    class ToAccumulator : Pointer(0xffff.toUShort())
+    class ToCPUAccumulator : Pointer(0xffff.toUShort())
 
     //special type of Pointer - to machine code
     class ToMachineCode : Pointer

@@ -20,7 +20,7 @@ abstract class Bus
 
     operator fun get(pointer : Pointer) : Int8
     {
-        if (pointer is Pointer.ToAccumulator)
+        if (pointer is Pointer.ToCPUAccumulator)
             return NES.CPU.A
 
         adapter.getMapping(pointer.toIndex())?.let { mapping ->
@@ -32,7 +32,7 @@ abstract class Bus
 
     operator fun set(pointer : Pointer, value : Int8)
     {
-        if (pointer is Pointer.ToAccumulator)
+        if (pointer is Pointer.ToCPUAccumulator)
         {
             NES.CPU.A=value
         }

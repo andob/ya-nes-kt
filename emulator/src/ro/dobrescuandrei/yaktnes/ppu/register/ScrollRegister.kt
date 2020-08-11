@@ -8,7 +8,7 @@ import ro.dobrescuandrei.yaktnes.utils.Vector
 //todo implement this
 class ScrollRegister : PPURegister()
 {
-    val scrollVector get() = Vector(x = scrollXOffset, y = scrollYOffset)
+    val scrollVector get() = Vector(x = scrollXOffset.toInt(), y = scrollYOffset.toInt())
 
     private var scrollXOffset = Int8.Zero
     private var scrollYOffset = Int8.Zero

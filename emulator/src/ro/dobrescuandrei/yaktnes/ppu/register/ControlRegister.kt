@@ -1,7 +1,6 @@
 package ro.dobrescuandrei.yaktnes.ppu.register
 
 import ro.dobrescuandrei.yaktnes.cpu.datatype.Pointer
-import ro.dobrescuandrei.yaktnes.cpu.datatype.toInt8
 import ro.dobrescuandrei.yaktnes.cpu.datatype.toPointer
 import ro.dobrescuandrei.yaktnes.utils.Size
 import ro.dobrescuandrei.yaktnes.utils.toInt
@@ -18,7 +17,7 @@ class ControlRegister : PPURegister()
     var shouldWriteBackdropFromExtPins = false
 
     //todo implement this
-    var spriteSize : Size = Size(width = 8.toInt8(), height = 8.toInt8())
+    var spriteSize : Size = Size(width = 8, height = 8)
 
     //todo implement this
     var backgroundPatternTableAddress : Pointer = Pointer.Zero
@@ -45,8 +44,8 @@ class ControlRegister : PPURegister()
         shouldReadBackdropFromExtPins=!shouldWriteBackdropFromExtPins
 
         if (byte.toInt().shr(5).and(1)>0)
-            spriteSize=Size(width = 8.toInt8(), height = 16.toInt8())
-        else spriteSize=Size(width = 8.toInt8(), height = 8.toInt8())
+            spriteSize=Size(width = 8, height = 16)
+        else spriteSize=Size(width = 8, height = 8)
 
         if (byte.toInt().shr(4).and(1)>0)
             backgroundPatternTableAddress=0x1000.toPointer()
@@ -73,7 +72,7 @@ class ControlRegister : PPURegister()
     override fun toByte() =
         0x00.or(shouldGenerateNMIAtTheStartOfVBlankInterval.toInt()).shl(1)
             .or(shouldWriteBackdropFromExtPins.toInt()).shl(1)
-            .or(if (spriteSize==Size(width = 8.toInt8(), height = 16.toInt8())) 1 else 0).shl(1)
+            .or(if (spriteSize==Size(width = 8, height = 16)) 1 else 0).shl(1)
             .or(if (backgroundPatternTableAddress==Pointer.Zero) 0 else 1).shl(1)
             .or(if (spritePatternTableAddress==Pointer.Zero) 0 else 1).shl(1)
             .or(if (vramAddressIncrementAfterDataRegisterIsSet==1) 0 else 1).shl(2)

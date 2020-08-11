@@ -51,7 +51,7 @@ open class PPUBus protected constructor() : Bus()
                 colorPalettes[pointer].toInt8()
             },
             writer = { colorPalettes, pointer, color ->
-                colorPalettes[pointer]= ColorFactory.newColor(color.toByte())
+                colorPalettes[pointer]=ColorFactory.newColor(color.toByte())
             }))
 
         return adapter

@@ -1,31 +1,29 @@
 package ro.dobrescuandrei.yaktnes.utils
 
-import ro.dobrescuandrei.yaktnes.cpu.datatype.Int8
-
 data class Size
 (
-    val width : Int8,
-    val height : Int8
+    val width : Int,
+    val height : Int
 )
 {
     override fun equals(other : Any?) =
         (other as? Size)?.width==width&&
         (other as? Size)?.height==height
 
-    override fun hashCode() = width.toInt()*31+height.toInt()
+    override fun hashCode() = width*31+height
 }
 
-data class Location
+data class Point
 (
-    val x : Int8,
-    val y : Int8
+    val x : Int,
+    val y : Int
 )
 {
     override fun equals(other : Any?) =
-        (other as? Location)?.x==x&&
-        (other as? Location)?.y==y
+        (other as? Point)?.x==x&&
+        (other as? Point)?.y==y
 
-    override fun hashCode() = x.toInt()*31+y.toInt()
+    override fun hashCode() = x*31+y
 }
 
-typealias Vector = Location
+typealias Vector = Point

@@ -36,7 +36,7 @@ object InstructionArgumentFactory
             AddressingMode.IndirectY ->
             {
                 val pointer=getPointerArgument(addressingMode, machineCode)
-                if (pointer is Pointer.ToAccumulator)
+                if (pointer is Pointer.ToCPUAccumulator)
                     return NES.CPU.A
                 return NES.CPU_BUS[pointer]
             }
@@ -52,7 +52,7 @@ object InstructionArgumentFactory
             AddressingMode.Accumulator ->
             {
                 //the argument is a pointer to CPU accumulator
-                return Pointer.ToAccumulator()
+                return Pointer.ToCPUAccumulator()
             }
 
             AddressingMode.ZeroPage ->
