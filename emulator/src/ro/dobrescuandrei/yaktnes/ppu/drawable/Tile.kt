@@ -1,4 +1,4 @@
-package ro.dobrescuandrei.yaktnes.ppu
+package ro.dobrescuandrei.yaktnes.ppu.drawable
 
 import com.badlogic.gdx.graphics.Color
 import ro.dobrescuandrei.yaktnes.ppu.color.ColorPalette
@@ -15,7 +15,6 @@ private constructor
 {
     companion object
     {
-        //todo test this
         @JvmStatic
         fun decodeFromCharacterRom(bytes : List<Byte>) : Tile
         {
@@ -36,7 +35,6 @@ private constructor
         }
     }
 
-    //todo test this
     fun toColorMatrix(colorPalette : ColorPalette) : ColorMatrix
     {
         fun Byte.toColor() =

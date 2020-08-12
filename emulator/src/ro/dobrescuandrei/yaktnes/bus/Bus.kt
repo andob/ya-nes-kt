@@ -23,11 +23,12 @@ abstract class Bus
         if (pointer is Pointer.ToCPUAccumulator)
             return NES.CPU.A
 
-        adapter.getMapping(pointer.toIndex())?.let { mapping ->
-            return mapping.reader.invoke(mapping.targetDevice, pointer)
-        }
+        val mapResult=adapter.map(pointer)
+        val readResult=mapResult?.mapping?.reader?.invoke(
+            /*device*/ mapResult.mapping.targetDevice,
+            /*pointer*/ mapResult.mappedPointer)
 
-        return randomizer.nextInt8()
+        return readResult?:randomizer.nextInt8()
     }
 
     operator fun set(pointer : Pointer, value : Int8)
@@ -38,9 +39,11 @@ abstract class Bus
         }
         else
         {
-            adapter.getMapping(pointer.toIndex())?.let { mapping ->
-                return mapping.writer.invoke(mapping.targetDevice, pointer, value)
-            }
+            val mapResult=adapter.map(pointer)
+            mapResult?.mapping?.writer?.invoke(
+                /*device*/ mapResult.mapping.targetDevice,
+                /*pointer*/ mapResult.mappedPointer,
+                /*value*/ value)
         }
     }
 }

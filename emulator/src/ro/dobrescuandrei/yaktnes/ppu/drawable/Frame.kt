@@ -1,4 +1,4 @@
-package ro.dobrescuandrei.yaktnes.ppu
+package ro.dobrescuandrei.yaktnes.ppu.drawable
 
 import com.badlogic.gdx.graphics.Color
 import ro.dobrescuandrei.yaktnes.ppu.scanline.LocationOnScreen

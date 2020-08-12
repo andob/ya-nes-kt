@@ -7,6 +7,7 @@ import org.junit.runners.Suite
 @Suite.SuiteClasses
 (
     CPUInstructionsTests::class,
-    CPUBusTests::class
+    CPUBusTests::class,
+    PPUScanlinesTest::class
 )
 class UnitTestsSuite

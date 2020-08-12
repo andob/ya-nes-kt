@@ -5,9 +5,9 @@ import ro.dobrescuandrei.yaktnes.cpu.datatype.Int8
 import ro.dobrescuandrei.yaktnes.ppu.color.ColorFactory
 import ro.dobrescuandrei.yaktnes.ppu.color.toInt8
 
-//todo unit test this
 //REFERENCE: https://wiki.nesdev.com/w/index.php/PPU_memory_map
-open class PPUBus protected constructor() : Bus()
+open class PPUBus
+protected constructor() : Bus()
 {
     companion object
     {
@@ -36,12 +36,12 @@ open class PPUBus protected constructor() : Bus()
                     runningRomFile.characterRom[pointer]=value
             }))
 
-        //todo implement this
-//        $2000-$23FF 	$0400 	Nametable 0
-//        $2400-$27FF 	$0400 	Nametable 1
-//        $2800-$2BFF 	$0400 	Nametable 2
-//        $2C00-$2FFF 	$0400 	Nametable 3
-//        $3000-$3EFF 	$0F00 	Mirrors of $2000-$2EFF
+        adapter.addMapping(BusAdapter.Mapping(
+            addressRange = 0x2000..0x2FFF,
+            targetDevice = NES.PPU.nametables,
+            mirrorRanges = listOf(0x3000..0x3EFF),
+            reader = { nametables, pointer -> nametables[pointer] },
+            writer = { nametables, pointer, value -> nametables[pointer]=value }))
 
         adapter.addMapping(BusAdapter.Mapping(
             addressRange = 0x3F00..0x3F1F,

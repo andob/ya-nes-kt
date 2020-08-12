@@ -3,11 +3,11 @@ package ro.dobrescuandrei.yaktnes.ppu
 import ro.dobrescuandrei.yaktnes.cpu.datatype.Int8
 import ro.dobrescuandrei.yaktnes.cpu.datatype.Pointer
 import ro.dobrescuandrei.yaktnes.cpu.datatype.toInt8
+import ro.dobrescuandrei.yaktnes.ppu.drawable.Tile
 
 class CharacterRom
 (
-    //todo make private
-    val rom : ByteArray
+    private val rom : ByteArray
 )
 {
     private fun Pointer.toIndex() = toUInt().toInt()

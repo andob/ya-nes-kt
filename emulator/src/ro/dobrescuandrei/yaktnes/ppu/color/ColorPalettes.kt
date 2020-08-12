@@ -3,7 +3,6 @@ package ro.dobrescuandrei.yaktnes.ppu.color
 import com.badlogic.gdx.graphics.Color
 import ro.dobrescuandrei.yaktnes.cpu.datatype.Pointer
 
-//todo unit test this
 class ColorPalettes
 (
     private val colors : Array<Color> =

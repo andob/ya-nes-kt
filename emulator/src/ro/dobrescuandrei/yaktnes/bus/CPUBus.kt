@@ -5,7 +5,8 @@ import ro.dobrescuandrei.yaktnes.cpu.datatype.Int8
 import ro.dobrescuandrei.yaktnes.cpu.datatype.toPointerToMachineCode
 
 //REFERENCE: http://wiki.nesdev.com/w/index.php/CPU_memory_map
-open class CPUBus protected constructor() : Bus()
+open class CPUBus
+protected constructor() : Bus()
 {
     companion object
     {
@@ -28,7 +29,6 @@ open class CPUBus protected constructor() : Bus()
             reader = { RAM, pointer -> RAM[pointer] },
             writer = { RAM, pointer, value -> RAM[pointer]=value }))
 
-        //todo test this mapping
         adapter.addMapping(BusAdapter.Mapping(
             addressRange = 0x2000..0x2007,
             mirrorRanges = (0x2008..0x3FF8 step 8).map { it..it+7 },

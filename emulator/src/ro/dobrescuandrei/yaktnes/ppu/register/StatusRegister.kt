@@ -4,7 +4,6 @@ import ro.dobrescuandrei.yaktnes.cpu.datatype.Int8
 import ro.dobrescuandrei.yaktnes.cpu.datatype.toPointer
 import ro.dobrescuandrei.yaktnes.utils.toInt
 
-//todo unit test this
 class StatusRegister : PPURegister()
 {
     var wasVerticalBlankPeriodStarted = false

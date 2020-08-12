@@ -6,7 +6,6 @@ import ro.dobrescuandrei.yaktnes.utils.Size
 import ro.dobrescuandrei.yaktnes.utils.toInt
 import java.lang.RuntimeException
 
-//todo unit test this
 class ControlRegister : PPURegister()
 {
     //todo implement this

@@ -3,7 +3,6 @@ package ro.dobrescuandrei.yaktnes.ppu.register
 import ro.dobrescuandrei.yaktnes.cpu.datatype.toPointer
 import ro.dobrescuandrei.yaktnes.utils.toInt
 
-//todo unit test this
 class MaskRegister : PPURegister()
 {
     //todo implement this

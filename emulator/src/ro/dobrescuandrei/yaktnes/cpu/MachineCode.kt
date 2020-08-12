@@ -17,17 +17,16 @@ class MachineCode
         val START_ADDRESS = 0x4020.toUShort()
     }
 
-    private fun Pointer.ToMachineCode.toIndex() =
-        (toUShort()-START_ADDRESS).toInt().rem(code.size)
+    private fun Pointer.ToMachineCode.toIndex() = (toUShort()-START_ADDRESS).toInt()
 
     operator fun get(pointer : Pointer.ToMachineCode) : Int8
     {
-        return code[pointer.toIndex()].toInt8()
+        return code[pointer.toIndex().rem(code.size)].toInt8()
     }
 
     operator fun set(pointer : Pointer.ToMachineCode, value : Int8)
     {
-        code[pointer.toIndex()]=value.toByte()
+        code[pointer.toIndex().rem(code.size)]=value.toByte()
     }
 
     fun hasNextByte() : Boolean
