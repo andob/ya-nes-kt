@@ -18,6 +18,7 @@ class OAMDataRegister : PPURegister()
 
     override fun toByte() : Byte
     {
+        IntArray(size = 3, init = {0}).map { it }.toIntArray()
         return targetValue.toByte()
     }
 }

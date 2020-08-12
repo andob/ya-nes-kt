@@ -27,3 +27,29 @@ data class Point
 }
 
 typealias Vector = Point
+
+data class SizeF
+(
+    val width : Float,
+    val height : Float
+)
+{
+    override fun equals(other : Any?) =
+        (other as? SizeF)?.width==width&&
+        (other as? SizeF)?.height==height
+
+    override fun hashCode() = (width*31+height).toInt()
+}
+
+data class PointF
+(
+    val x : Float,
+    val y : Float
+)
+{
+    override fun equals(other : Any?) =
+        (other as? PointF)?.x==x&&
+        (other as? PointF)?.y==y
+
+    override fun hashCode() = (x*31+y).toInt()
+}

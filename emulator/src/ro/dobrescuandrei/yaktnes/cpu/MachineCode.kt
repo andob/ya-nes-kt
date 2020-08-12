@@ -17,7 +17,8 @@ class MachineCode
         val START_ADDRESS = 0x4020.toUShort()
     }
 
-    private fun Pointer.ToMachineCode.toIndex() = (toUShort()-START_ADDRESS).toInt()
+    private fun Pointer.ToMachineCode.toIndex() =
+        (toUShort()-START_ADDRESS).toInt().rem(code.size)
 
     operator fun get(pointer : Pointer.ToMachineCode) : Int8
     {

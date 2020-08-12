@@ -1,15 +1,13 @@
 package ro.dobrescuandrei.yaktnes.ppu.scanline
 
-import ro.dobrescuandrei.yaktnes.utils.Point
-
 class ScanlinesManager
 {
     private var currentScanline = Scanline.Zero
     private var currentCycle = Cycle.Zero
 
-    fun nextPoint() : Point
+    fun nextLocationOnScreen() : LocationOnScreen
     {
-        val point=currentCycle.toPoint()
+        val locationOnScreen=currentCycle.toLocationOnScreen()
 
         if (currentCycle.index==Cycle.MaxValue.index)
         {
@@ -26,6 +24,6 @@ class ScanlinesManager
         }
         else currentCycle++
 
-        return point
+        return locationOnScreen
     }
 }

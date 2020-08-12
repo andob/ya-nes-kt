@@ -1,18 +1,24 @@
 package ro.dobrescuandrei.yaktnes.ppu
 
+import com.badlogic.gdx.graphics.Color
 import org.reflections.Reflections
 import ro.dobrescuandrei.yaktnes.cpu.datatype.Int8
 import ro.dobrescuandrei.yaktnes.cpu.datatype.Pointer
 import ro.dobrescuandrei.yaktnes.ppu.color.ColorPalettes
 import ro.dobrescuandrei.yaktnes.ppu.register.*
 import ro.dobrescuandrei.yaktnes.ppu.scanline.ScanlinesManager
+import ro.dobrescuandrei.yaktnes.utils.Clock
 
 //Picture Processing Unit
 class PPU
 {
+    var clock = Clock.withSpeedInMegaHertz(5.31f)
+
     val colorPalettes = ColorPalettes()
 
     val scanlinesManager = ScanlinesManager()
+
+    val currentFrame = Frame()
 
     val registers by lazy {
         Reflections(this::class.java.`package`.name)
@@ -39,5 +45,20 @@ class PPU
                 return register.getValue()
         return Int8.Zero
     }
-}
 
+    fun render()
+    {
+        while (true)
+        {
+            val locationOnScreen=scanlinesManager.nextLocationOnScreen()
+
+            getRegister<StatusRegister>().wasVerticalBlankPeriodStarted=
+                    locationOnScreen.scanline.isInVerticalBlankPeriod()
+
+            currentFrame[locationOnScreen]=Color.RED
+
+            //todo tune the clock
+            //clock.await(1)
+        }
+    }
+}

@@ -7,7 +7,6 @@ import ro.dobrescuandrei.yaktnes.utils.toInt
 //todo unit test this
 class StatusRegister : PPURegister()
 {
-    //todo implement this
     var wasVerticalBlankPeriodStarted = false
 
     //todo implement this

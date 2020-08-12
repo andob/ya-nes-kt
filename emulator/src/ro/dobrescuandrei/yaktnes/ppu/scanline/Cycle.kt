@@ -31,4 +31,7 @@ class Cycle
     override fun toString() = index.toString()
 
     fun toPoint() = Point(x = index, y = parentScanline.index)
+
+    fun toLocationOnScreen() =
+        LocationOnScreen(scanline = parentScanline, cycle = this, point = toPoint())
 }

@@ -7,7 +7,7 @@ import ro.dobrescuandrei.yaktnes.bus.PPUBus
 import ro.dobrescuandrei.yaktnes.ppu.PPU
 import ro.dobrescuandrei.yaktnes.ram.RAM
 import ro.dobrescuandrei.yaktnes.rom.ROMFile
-import kotlin.concurrent.thread
+import ro.dobrescuandrei.yaktnes.utils.Run
 
 object NES
 {
@@ -37,8 +37,8 @@ object NES
     {
         components.RunningRomFile=romFile
 
-        thread(start = true) {
-            CPU.execute(romFile.machineCode)
-        }
+        Run.thread { CPU.execute(machineCode = romFile.machineCode) }
+
+        Run.thread { PPU.render() }
     }
 }
